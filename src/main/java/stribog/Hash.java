@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package stribog;
 
 import java.util.Arrays;
@@ -43,7 +47,6 @@ public class Hash {
         var l = message.length;
 
         //Разбиение сообщения на блоки 64 байт
-
         while (l > 64) {
             System.arraycopy(message, l - 64, m, 0, 64);
             h = gN(h, m);
@@ -52,11 +55,9 @@ public class Hash {
             l -= 64;
         }
         m = Arrays.copyOfRange(message, message.length - l, message.length);
-        //System.arraycopy(message, 0, m, 63 - l + 1, l);
 
 
         //выполняется сдвиг массива вправо, а оставшееся пространство заполняется нулями, а перед началом оставшегося массива - единицей
-
         if (l != 64){
             var shift = new int[64];
             Arrays.fill(shift, 0x00);
@@ -72,7 +73,6 @@ public class Hash {
         h = g0(h, N);
         h = g0(h, Sigma);
 
-
         if (length) return h;
 
         else {
@@ -82,8 +82,6 @@ public class Hash {
         }
 
     }
-
-
 
     /**
      * Функция реализует операцию сложения в кольце, т.е. с переносом в следующий байт. Переполнение отбрасывается
@@ -112,6 +110,12 @@ public class Hash {
         return xFun(xFun(E(LPS, m), h), m);
     }
 
+
+    /**
+     * Часть функции сжатия. Задача - XOR временного ключа с итерационными константами, указанными в настоящем ГОСТ.
+     * По сути надёжность алгоритма хэширования достигается именно ей.
+     * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
+     */
     private int[] E(int[] k, int[] m) {
         var result = xFun(k, m);
         var tempKey = k;
