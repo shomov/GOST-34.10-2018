@@ -8,9 +8,8 @@ import java.util.Arrays;
  *  "http://protect.gost.ru/v.aspx?control=7&id=232143"
  */
 public class Hash {
-    private int[] h;
     private boolean length;
-    private int[] iv;
+    private final int[] iv;
     private int[] N;
     private int[] Sigma;
 
@@ -40,7 +39,7 @@ public class Hash {
 
     public int[] getHash (int[] message){
         var m = new int[64];
-        this.h = iv;
+        var h = iv;
         var l = message.length;
         while (l > 64) {
             System.arraycopy(message, l - 64, m, 0, 64);
@@ -72,15 +71,12 @@ public class Hash {
         N = ringAdd(N, Constants.numByte(l));
         Sigma = ringAdd(Sigma, m);
         h = g0(h, N);
+        h = g0(h, Sigma);
 
 
-        if (length) {
-            h = g0(h, Sigma);
-            return h;
-        }
+        if (length) return h;
 
         else {
-
             var h256 = new int[32];
             System.arraycopy(h, 0, h256, 0, 32);
             return h256;

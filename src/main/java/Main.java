@@ -24,11 +24,11 @@ public class Main {
         var ar = stribog.getHash(message1);
         for (var bite : ar) hash.append(Integer.toHexString(bite));
         System.out.println(hash);
-//        var hash2 = new StringBuilder();
-//        var stribog2 = new Hash(256);
-//        var ar2 = stribog2.getHash(message2);
-//        for (var bite : ar2) hash2.append(Integer.toHexString(bite));
-//        System.out.println(hash2);
+        var hash2 = new StringBuilder();
+        var stribog2 = new Hash(256);
+        var ar2 = stribog2.getHash(message1);
+        for (var bite : ar2) hash2.append(Integer.toHexString(bite));
+        System.out.println(hash2);
 
 //        var hash2 = new StringBuilder();
 //        var stribog2 = new Hash(512);
