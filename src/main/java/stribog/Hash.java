@@ -41,6 +41,9 @@ public class Hash {
         var m = new int[64];
         var h = iv;
         var l = message.length;
+
+        //Разбиение сообщения на блоки 64 байт
+
         while (l > 64) {
             System.arraycopy(message, l - 64, m, 0, 64);
             h = gN(h, m);
@@ -49,7 +52,7 @@ public class Hash {
             l -= 64;
         }
         m = Arrays.copyOfRange(message, message.length - l, message.length);
-
+        //System.arraycopy(message, 0, m, 63 - l + 1, l);
 
 
         //выполняется сдвиг массива вправо, а оставшееся пространство заполняется нулями, а перед началом оставшегося массива - единицей
@@ -57,16 +60,12 @@ public class Hash {
         if (l != 64){
             var shift = new int[64];
             Arrays.fill(shift, 0x00);
-            shift[64 - l] = 0x01;
-            for (var i = 64 - l; i < 64; i++)
-                shift[i] = m[i + l - 64];
+            System.arraycopy(message, 0, shift, 64 - l, l);
             shift[64 - l - 1] = 0x01;
             m = shift;
         }
 
-
         h = gN(h, m);
-
 
         N = ringAdd(N, Constants.numByte(l));
         Sigma = ringAdd(Sigma, m);
