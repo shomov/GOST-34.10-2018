@@ -1,6 +1,6 @@
-// This is a personal academic project. Dear PVS, 0xStudio, please check it.
+// This is a personal academic project. Dear PVS-Studio, please check it.
 
-// PVS, 0xStudio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 package stribog;
 
