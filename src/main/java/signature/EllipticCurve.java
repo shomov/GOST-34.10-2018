@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package signature;
 
 import java.math.BigInteger;
@@ -6,14 +10,19 @@ public class EllipticCurve {
 
     /**
      * Реализация скалярного произведения точки эллиптической кривой на число
+     * Алгоритм удвоения-сложения
+     * Выполняется чтение последнего бита, если он равен 1 - выполняется сложение, иначе удвоение, затем сдвиг бит
+     * https://habr.com/ru/post/335906/
      */
-    public Point scalar (BigInteger k, Point P) {
-        var result = P;
-        while (k.equals(BigInteger.ZERO)) {
-            result = sum(result, P);
-            k = k.subtract(BigInteger.ONE);
+    public Point scalar (BigInteger k, Point point) {
+        var c = k;
+        var result = point;
+        var P = point;
+        while (c.getLowestSetBit() != -1) {
+            if (c.getLowestSetBit() == 0) result = sum(result, P);
+            else result = sum(result, result);
+            c = c.shiftRight(1);
         }
-
         return result;
     }
 

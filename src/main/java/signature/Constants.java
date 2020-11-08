@@ -17,10 +17,11 @@ public class Constants {
     public static final BigInteger p = new BigInteger("57896044618658097711785492504343953926634992332820282019728792003956564821041");
     // Коэффициенты эллиптичекой кривой
     public static final BigInteger a = new BigInteger("7");
-    // Порядок группы точекэллиптической кривой
     public static final BigInteger b = new BigInteger("43308876546767276905765904595650931995942111794451039583252968842033849580414");
-    // Порядок циклической
+    // Порядок группы точек эллиптической кривой
     public static final BigInteger m = new BigInteger("57896044618658097711785492504343953927082934583725450622380973592137631069619");
+    // Порядок циклической подгруппы группы точек эллиптической кривой
+    public static final BigInteger q = new BigInteger("57896044618658097711785492504343953927082934583725450622380973592137631069619");
     // Коэффициенты точки эллиптической кривой
     public static final BigInteger xp = new BigInteger("2");
     public static final BigInteger yp = new BigInteger("4018974056539037503335449422937059775635739389905545080690979365213431566280");
