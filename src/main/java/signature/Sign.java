@@ -13,11 +13,11 @@ import java.util.Random;
  * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=B45A6C4D-DAD9-46F1-829E-9A8C682166D4
  */
 public class Sign {
-    BigInteger k;
-    BigInteger e;
-    BigInteger d;
-    BigInteger r;
-    BigInteger s;
+    private BigInteger k;
+    private BigInteger e;
+    private BigInteger d;
+    private BigInteger r;
+    private BigInteger s;
 
     public String signing (BigInteger hash, BigInteger dK){
         this.d = dK;
@@ -55,7 +55,7 @@ public class Sign {
     }
 
     // см. (18)
-    public void calcS() {
+    private void calcS() {
         s = ((r.multiply(d)).add(k.multiply(e))).mod(Constants.q);
         if (s.equals(BigInteger.ZERO))
             randK();
