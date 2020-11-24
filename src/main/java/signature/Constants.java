@@ -10,7 +10,6 @@ import java.math.BigInteger;
 /**
  * Базовые параметры эллиптической кривой
  * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=8E69DFE1-1A5C-4CF4-A10C-9C35E90341F2
- * N.B. Данный класс временный. В дальнейшем у эксплуатантов появится возможность задания параметров вручную или генерировать их автоматически
  */
 public class Constants {
     // Модуль эллиптической кривой
