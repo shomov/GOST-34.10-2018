@@ -16,9 +16,12 @@ public class Point {
         this.y = y;
     }
 
+    public static final Point POINT_INFINITY = new Point();
+
+
     public Point() {
-        this.x = BigInteger.ZERO;
-        this.y =  BigInteger.ZERO;
+        this.x = null;
+        this.y = null;
     }
 
     public BigInteger getX() {
@@ -37,4 +40,7 @@ public class Point {
         this.y = y;
     }
 
+    public boolean equals(Point pnt) {
+        return x == pnt.getX() && y == pnt.getY();
+    }
 }
