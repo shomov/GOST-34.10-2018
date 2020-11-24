@@ -11,44 +11,54 @@ public class EllipticCurve {
     /**
      * Реализация скалярного произведения точки эллиптической кривой на число
      * Алгоритм удвоения-сложения
-     * Выполняется чтение последнего бита, если он равен 1 - выполняется сложение, иначе удвоение, затем сдвиг бит
+     * Выполняется чтение бита, если он равен 1 - выполняется сложение, иначе удвоение, затем сдвиг бит
      * https://habr.com/ru/post/335906/
      */
     public Point scalar (BigInteger k, Point point) {
+        var result = Point.POINT_INFINITY;
+        var bits = new int[k.bitLength()];
+
         var c = k;
-        var result = point;
-        var P = point;
-        while (c.getLowestSetBit() != -1) {
-            if (c.getLowestSetBit() == 0) result = sum(result, P);
-            else result = sum(result, result);
+        var i = 0;
+        while (c.getLowestSetBit() >= 0) {
+            bits[i] = 0;
+            if (c.getLowestSetBit() == 0)
+                bits[i] = 1;
+            i++;
             c = c.shiftRight(1);
+        }
+        i = k.bitLength() - 1;
+        while (i != -1){
+            result = sum(result, result);
+            if (bits[i]== 1)
+                result = sum(result, point);
+            i--;
         }
         return result;
     }
 
     /**
      * Функция реализует операцию сложения двух точек эллиптической кривой
-     * Расчётные ыормулы предствлены в соответствующей части ГОСТ-34.10-2018
-     * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=E8B73425-BBD6-4AD6-9202-39793648B123
+     * https://stackoverflow.com/questions/15727147/scalar-multiplication-of-point-over-elliptic-curve
      */
     public Point sum (Point a, Point b) {
         var result = new Point();
-        // Формула 4
-        if (!a.getX().equals(b.getX())) {
-            var lambda = ((b.getY().subtract(a.getY())).divide(b.getX().subtract(a.getX()))).mod(Constants.p);
-            result.setX(lambda.pow(2).subtract(a.getX()).subtract(b.getX().mod(Constants.p)));
-            result.setY(lambda.multiply(a.getX().subtract(result.getX())).subtract(a.getX().mod(Constants.p)));
+        if (b.equals(Point.POINT_INFINITY))
+            return a;
+        else if (a.equals(Point.POINT_INFINITY))
+            return b;
+        else if (b.equals(a)) {
+            var lambda = (((a.getX().pow(2)).multiply(BigInteger.valueOf(3))).add(Constants.a)).multiply((a.getY().multiply(BigInteger.TWO)).modInverse(Constants.p));
+            result.setX((lambda.pow(2).subtract(a.getX().multiply(BigInteger.TWO))).mod(Constants.p));
+            result.setY((lambda.multiply(a.getX().subtract(result.getX()))).mod(Constants.p).subtract(a.getY()));
         }
-        // Формула 5
-        else if (a.getX().equals(b.getX()) && a.getY().equals(b.getY()) && !a.getY().equals(BigInteger.ZERO)) {
-            var lambda = ((BigInteger.valueOf(3).multiply(a.getX().pow(2)).add(Constants.a)).divide(BigInteger.TWO.multiply(a.getY()))).mod(Constants.p);
-            result.setX(lambda.pow(2).subtract(BigInteger.TWO).multiply(a.getX().mod(Constants.p)));
-            result.setY(lambda.multiply(a.getX().subtract(result.getX())).subtract(a.getY().mod(Constants.p)));
+        else {
+            var lambda = (b.getY().subtract(a.getY())).multiply(b.getX().subtract(a.getX()).modInverse(Constants.p));
+            result.setX(lambda.modPow(BigInteger.TWO, Constants.p).subtract(b.getX()).subtract(a.getX()).mod(Constants.p));
+            result.setY(((lambda.multiply(a.getX().subtract(result.getX()))).mod(Constants.p)).subtract((a.getY().mod(Constants.p))));
         }
 
         return result;
     }
-
-
 
 }
