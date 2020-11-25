@@ -1,5 +1,4 @@
 language: java
-sudo: false # faster builds
   
 before_install:
   - sudo apt-get install jq
@@ -7,4 +6,4 @@ before_install:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
+  - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r target/site/jacoco/jacoco.xml
