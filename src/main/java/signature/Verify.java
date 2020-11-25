@@ -13,13 +13,13 @@ import java.math.BigInteger;
 public class Verify {
     private String sign;
     private Point Q;
-    private byte[] hash;
+    private BigInteger hash;
     private BigInteger r;
     private BigInteger s;
     private BigInteger e;
 
 
-    public boolean check (String sign, Point Q, byte[] hash) {
+    public boolean check (String sign, Point Q, BigInteger hash) {
         this.sign = sign;
         this.Q = Q;
         this.hash = hash;
@@ -33,12 +33,7 @@ public class Verify {
 
         var R = calcC().getX().mod(Constants.q);
 
-        if (R.compareTo(r) == 0)
-            return true;
-        System.out.println("Fail");
-        System.out.println(R.toString());
-        System.out.println(r.toString());
-        return false;
+        return R.compareTo(r) == 0;
     }
 
     /**
@@ -55,7 +50,7 @@ public class Verify {
      * см. Шаг 2-3
      */
     private void calcE() {
-        var alpha = new BigInteger(hash);
+        var alpha = hash;
         e = alpha.mod(Constants.q);
         if (e.compareTo(BigInteger.ZERO) == 0)
             e = BigInteger.ONE;
