@@ -27,19 +27,19 @@ class SignTest {
         var curveOperation = new EllipticCurve();
         var stribog512_1 = new Hash(512);
         var check = new Verify();
-        var ar512 = stribog512_1.getHash(randomMessage());
 
         var test = true;
 
         for (var i = 0; i < testIterations; i++){
+            var ar512 = stribog512_1.getHash(randomMessage());
             // подписание
             var sign = new Sign();
             var d = randomKey();
-            var key = sign.signing(new BigInteger(int2byte(ar512)), d);
+            var key = sign.signing(ar512, d);
             var Q = curveOperation.scalar(d, Constants.P);
 
             // верификация
-            var ver = check.check(key, Q, new BigInteger(int2byte(ar512)));
+            var ver = check.check(key, Q, ar512);
             if (!ver){
                 test = false;
                 break;
@@ -59,18 +59,19 @@ class SignTest {
         var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
         var d = randomKey();
-        var key = sign.signing(new BigInteger(int2byte(ar512)), d);
+        var key = sign.signing(ar512, d);
         var Q = curveOperation.scalar(d, Constants.P);
 
         var test = false;
 
         for (var i = 0; i < testIterations; i++) {
             var rand = new Random();
-            message[rand.nextInt(message.length)] = rand.nextInt(256);
+            var msg = message;
+            msg[rand.nextInt(message.length)] = rand.nextInt(256);
 
-            var ar512W = stribog512_1.getHash(message);
+            var ar512W = stribog512_1.getHash(msg);
 
-            var ver = check.check(key, Q, new BigInteger(int2byte(ar512W)));
+            var ver = check.check(key, Q,ar512W);
             if (ver){
                 test = true;
                 break;
@@ -93,7 +94,7 @@ class SignTest {
         var test = false;
 
         for (var i = 0; i < testIterations; i++) {
-            var key = new StringBuilder(sign.signing(new BigInteger(int2byte(ar512)), d));
+            var key = new StringBuilder(sign.signing(ar512, d));
 
             var rand = new Random();
             int r;
@@ -107,7 +108,7 @@ class SignTest {
             key.setCharAt(r, ch.charAt(0));
 
 
-            var ver = check.check(key.toString(), Q, new BigInteger(int2byte(ar512)));
+            var ver = check.check(key.toString(), Q, ar512);
             if (ver){
                 test = true;
                 break;
@@ -126,7 +127,7 @@ class SignTest {
         var d = randomKey();
         var ar512 = stribog512_1.getHash(randomMessage());
         var sign = new Sign();
-        var key = sign.signing(new BigInteger(int2byte(ar512)), d);
+        var key = sign.signing(ar512, d);
         var Q = curveOperation.scalar(d, Constants.P);
 
         var test = false;
@@ -136,10 +137,10 @@ class SignTest {
             var rand = new Random();
             var rx = rand.nextInt();
             var ry = rand.nextInt();
-            Q.setX(Q.getX().add(BigInteger.valueOf(rx)));
-            Q.setY(Q.getY().add(BigInteger.valueOf(ry)));
+            var x = (Q.getX().add(BigInteger.valueOf(rx)));
+            var y = (Q.getY().add(BigInteger.valueOf(ry)));
 
-            var ver = check.check(key, Q, new BigInteger(int2byte(ar512)));
+            var ver = check.check(key, new Point(x, y), ar512);
             if (ver){
                 test = true;
                 break;
@@ -154,7 +155,7 @@ class SignTest {
         var rand = new Random();
         var size = Math.abs(rand.nextInt(1000));
         var message = new int[size];
-        for (var i = 0; i< size; i++)
+        for (var i = 0; i < size; i++)
             message[i] = Math.abs(rand.nextInt(256));
         return message;
     }
@@ -165,19 +166,5 @@ class SignTest {
     }
 
 
-    // https://stackoverflow.com/questions/2183240/java-integer-to-byte-array
-    public static byte[] int2byte(int[] src) {
-        var srcLength = src.length;
-        var dst = new byte[srcLength << 2];
-        for (var i = 0; i < srcLength; i++) {
-            var x = src[i];
-            var j = i << 2;
-            dst[j++] = (byte) ((x >>> 0) & 0xff);
-            dst[j++] = (byte) ((x >>> 8) & 0xff);
-            dst[j++] = (byte) ((x >>> 16) & 0xff);
-            dst[j++] = (byte) ((x >>> 24) & 0xff);
-        }
-        return dst;
-    }
 
 }

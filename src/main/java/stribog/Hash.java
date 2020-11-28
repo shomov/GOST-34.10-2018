@@ -4,6 +4,7 @@
 
 package stribog;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
@@ -41,7 +42,7 @@ public class Hash {
         }
     }
 
-    public int[] getHash (int[] message){
+    public BigInteger getHash (int[] message){
         var m = new int[64];
         var h = iv;
         var l = message.length;
@@ -73,12 +74,12 @@ public class Hash {
         h = g0(h, N);
         h = g0(h, Sigma);
 
-        if (length) return h;
+        if (length) return new BigInteger(int2byte(h));
 
         else {
             var h256 = new int[32];
             System.arraycopy(h, 0, h256, 0, 32);
-            return h256;
+            return new BigInteger(int2byte(h256));
         }
 
     }
@@ -178,6 +179,19 @@ public class Hash {
         return result;
     }
 
-
+    // https://stackoverflow.com/questions/2183240/java-integer-to-byte-array
+    public static byte[] int2byte(int[] src) {
+        var srcLength = src.length;
+        var dst = new byte[srcLength << 2];
+        for (var i = 0; i < srcLength; i++) {
+            var x = src[i];
+            var j = i << 2;
+            dst[j++] = (byte) ((x >>> 0) & 0xff);
+            dst[j++] = (byte) ((x >>> 8) & 0xff);
+            dst[j++] = (byte) ((x >>> 16) & 0xff);
+            dst[j++] = (byte) ((x >>> 24) & 0xff);
+        }
+        return dst;
+    }
 
 }

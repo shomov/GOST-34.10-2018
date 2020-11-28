@@ -8,8 +8,8 @@ import java.math.BigInteger;
 
 public class Point {
 
-    private BigInteger x;
-    private BigInteger y;
+    final private BigInteger x;
+    final private BigInteger y;
 
     public Point(BigInteger x, BigInteger y) {
         this.x = x;
@@ -17,7 +17,6 @@ public class Point {
     }
 
     public static final Point POINT_INFINITY = new Point();
-
 
     public Point() {
         this.x = null;
@@ -28,19 +27,15 @@ public class Point {
         return x;
     }
 
-    public void setX(BigInteger x) {
-        this.x = x;
-    }
-
     public BigInteger getY() {
         return y;
     }
 
-    public void setY(BigInteger y) {
-        this.y = y;
-    }
-
     public boolean equals(Point pnt) {
-        return x == pnt.getX() && y == pnt.getY();
+        if (this == pnt) return true;
+        if (this == POINT_INFINITY) return false;
+        if (x != null && y != null && pnt.getX() != null && pnt.getY() != null)
+            return ((x.equals(pnt.getX())) && (y.equals(pnt.getY())));
+        return false;
     }
 }

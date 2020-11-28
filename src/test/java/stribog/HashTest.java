@@ -7,6 +7,8 @@ package stribog;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
+
 
 /**
  * Данная программа тестирования включает в себя Контрольные примеры из Приложения А ГОСТ 34.11-2018
@@ -35,10 +37,14 @@ class HashTest {
             0x3D, 0xCC, 0xD5, 0xB9, 0xF5, 0x4A, 0x1A, 0xD0, 0x54, 0x1B
     };
 
+    BigInteger hash1_512BI = new BigInteger(int2byte(hash1_512));
+
     static int[] hash1_256 = {
             0x00, 0x55, 0x7B, 0xE5, 0xE5, 0x84, 0xFD, 0x52, 0xA4, 0x49, 0xB1, 0x6B, 0x02, 0x51, 0xD0, 0x5D, 0x27, 0xF9, 
             0x4A, 0xB7, 0x6C, 0xBA, 0xA6, 0xDA, 0x89, 0x0B, 0x59, 0xD8, 0xEF, 0x1E, 0x15, 0x9D
     };
+
+    BigInteger hash1_256BI = new BigInteger(int2byte(hash1_256));
 
     static int[] hash2_512 = {
             0x28, 0xfb, 0xc9, 0xba, 0xda, 0x03, 0x3b, 0x14, 0x60, 0x64, 0x2b, 0xdc, 0xdd, 0xb9, 0x0c, 0x3f, 0xb3, 0xe5,
@@ -47,10 +53,14 @@ class HashTest {
             0x94, 0x99, 0x6f, 0xca, 0xbf, 0x26, 0x22, 0xe6, 0x88, 0x1e
     };
 
+    BigInteger hash2_512BI = new BigInteger(int2byte(hash2_512));
+
     static int[] hash2_256 = {
             0x50, 0x8f, 0x7e, 0x55, 0x3c, 0x06, 0x50, 0x1d, 0x74, 0x9a, 0x66, 0xfc, 0x28, 0xc6, 0xca, 0xc0, 0xb0, 0x05,
             0x74, 0x6d, 0x97, 0x53, 0x7f, 0xa8, 0x5d, 0x9e, 0x40, 0x90, 0x4e, 0xfe, 0xd2, 0x9d
     };
+
+    BigInteger hash2_256BI = new BigInteger(int2byte(hash2_256));
 
     @Test
     void getHash() {
@@ -58,20 +68,35 @@ class HashTest {
         //Пример 1
         var stribog512_1 = new Hash(512);
         var ar512 = stribog512_1.getHash(message1);
-        Assert.assertArrayEquals(hash1_512, ar512);
+        Assert.assertEquals(hash1_512BI, ar512);
 
         var stribog512_2 = new Hash(512);
         ar512 = stribog512_2.getHash(message2);
-        Assert.assertArrayEquals(hash2_512, ar512);
+        Assert.assertEquals(hash2_512BI, ar512);
 
         //Пример 2
         var stribog256_1 = new Hash(256);
         var ar256 = stribog256_1.getHash(message1);
-        Assert.assertArrayEquals(hash1_256, ar256);
+        Assert.assertEquals(hash1_256BI, ar256);
 
         var stribog256_2 = new Hash(256);
         ar256 = stribog256_2.getHash(message2);
-        Assert.assertArrayEquals(hash2_256, ar256);
+        Assert.assertEquals(hash2_256BI, ar256);
 
+    }
+
+    // https://stackoverflow.com/questions/2183240/java-integer-to-byte-array
+    public static byte[] int2byte(int[]src) {
+        var srcLength = src.length;
+        var dst = new byte[srcLength << 2];
+        for (var i = 0; i < srcLength; i++) {
+            var x = src[i];
+            var j = i << 2;
+            dst[j++] = (byte) ((x >>> 0) & 0xff);
+            dst[j++] = (byte) ((x >>> 8) & 0xff);
+            dst[j++] = (byte) ((x >>> 16) & 0xff);
+            dst[j++] = (byte) ((x >>> 24) & 0xff);
+        }
+        return dst;
     }
 }
