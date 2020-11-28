@@ -64,9 +64,8 @@ public class Sign {
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
     private String completion (BigInteger num) {
         var str = new StringBuilder(num.toString(16));
-        while (str.length() != Constants.p.bitLength() / 4) { //1 цифра кодируется 4 битами
+        while (str.length() != Constants.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
-        }
         return str.toString();
     }
 

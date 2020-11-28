@@ -4,7 +4,9 @@
 
 package major;
 
-import signature.*;
+import signature.Point;
+import signature.Sign;
+import signature.Verify;
 import stribog.Hash;
 
 import java.math.BigInteger;

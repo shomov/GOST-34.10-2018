@@ -58,7 +58,6 @@ public class Hash {
         }
         m = Arrays.copyOfRange(message, message.length - l, message.length);
 
-
         //выполняется сдвиг массива вправо, а оставшееся пространство заполняется нулями, а перед началом оставшегося массива - единицей
         if (l != 64){
             var shift = new int[64];
@@ -187,7 +186,7 @@ public class Hash {
         for (var i = 0; i < srcLength; i++) {
             var x = src[i];
             var j = i << 2;
-            dst[j++] = (byte) ((x >>> 0) & 0xff);
+            dst[j++] = (byte) ((x) & 0xff);
             dst[j++] = (byte) ((x >>> 8) & 0xff);
             dst[j++] = (byte) ((x >>> 16) & 0xff);
             dst[j++] = (byte) ((x >>> 24) & 0xff);

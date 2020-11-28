@@ -84,9 +84,7 @@ public class FlagManager {
 
     private void setPrivateKey() {
         var list = file.keyReader(filePrivateKey);
-        if (list.size() != 1){
-            msg.errorsIO(2, filePrivateKey);
-        }
+        if (list.size() != 1) msg.errorsIO(2, filePrivateKey);
         d = list.get(0);
     }
 
