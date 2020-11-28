@@ -18,6 +18,7 @@ public class Hash {
     private int[] N;
     private int[] Sigma;
 
+    Constants constants = new Constants();
 
     /**
      * Инициализация хэш-функции, установка начальных значений
@@ -51,7 +52,7 @@ public class Hash {
         while (l > 64) {
             System.arraycopy(message, l - 64, m, 0, 64);
             h = gN(h, m);
-            N = ringAdd(N, Constants.numByte(512 / 8));
+            N = ringAdd(N, constants.numByte(512 / 8));
             Sigma = ringAdd(Sigma, m);
             l -= 64;
         }
@@ -69,7 +70,7 @@ public class Hash {
 
         h = gN(h, m);
 
-        N = ringAdd(N, Constants.numByte(l));
+        N = ringAdd(N, constants.numByte(l));
         Sigma = ringAdd(Sigma, m);
         h = g0(h, N);
         h = g0(h, Sigma);
@@ -102,7 +103,7 @@ public class Hash {
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] g0(int[] h, int[] m) {
-        var LPS = L(P(S(xFun(h, Constants.numByte(0)))));
+        var LPS = L(P(S(xFun(h, constants.numByte(0)))));
         return xFun(xFun(E(LPS, m), h), m);
     }
 
@@ -121,7 +122,7 @@ public class Hash {
         var result = xFun(k, m);
         var tempKey = k;
         for (var i = 0; i < 12; i++) {
-            tempKey = L(P(S(xFun(tempKey, Constants.C[i]))));
+            tempKey = L(P(S(xFun(tempKey, constants.C[i]))));
             result = xFun(L(P(S(result))), tempKey);
         }
         return result;
@@ -146,7 +147,7 @@ public class Hash {
     private int[] S (int[] val) {
         var result = new int[64];
         Arrays.fill(result, 0);
-        for (var i = 0; i < 64; i++) result[i] = Constants.substitution[val[i]];
+        for (var i = 0; i < 64; i++) result[i] = constants.substitution[val[i]];
         return result;
     }
 
@@ -157,7 +158,7 @@ public class Hash {
      */
     private int[] P (int[] val) {
         var result = new int[64];
-        for (var i = 0; i < 64; i++) result[i] = val[Constants.t[i]];
+        for (var i = 0; i < 64; i++) result[i] = val[constants.t[i]];
         return result;
     }
 
@@ -175,7 +176,7 @@ public class Hash {
                 for(var k = 0; k < 8; k++)
                     if ((val[i * 8 + j] & (1 << Math.abs(k - 7))) != 0)
                         for (var l = 0; l < 8; l++)
-                            result[8 * i + l] ^= Constants.A[j * 8 + k][l];
+                            result[8 * i + l] ^= constants.A[j * 8 + k][l];
         return result;
     }
 

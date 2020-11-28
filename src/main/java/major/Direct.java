@@ -6,18 +6,17 @@ import stribog.Hash;
 import java.math.BigInteger;
 
 public class Direct {
-    String fileMessage;
-    String fileOut;
-    String fileSig;
-    Point Q;
-    BigInteger d;
-    BigInteger hash;
+    private final String fileOut;
+    private final String fileSig;
+    private final Point Q;
+    private final BigInteger d;
+    private final BigInteger hash;
 
     FileManager file = new FileManager();
     MessageManager msg = new MessageManager();
 
     public Direct(FlagManager flag) {
-        this.fileMessage = flag.fileMessage;
+        var fileMessage = flag.fileMessage;
         this.fileOut = flag.outputFileName;
         this.fileSig = flag.fileSig;
         this.Q = flag.Q;
