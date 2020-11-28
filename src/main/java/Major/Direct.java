@@ -8,6 +8,8 @@ import java.math.BigInteger;
 
 public class Direct {
     String fileMessage;
+    String fileOut;
+    String fileSig;
     Point Q;
     BigInteger d;
     BigInteger hash;
@@ -16,9 +18,10 @@ public class Direct {
 
     public Direct(FlagManager flag) throws IOException {
         this.fileMessage = flag.fileMessage;
+        this.fileOut = flag.outputFileName;
+        this.fileSig = flag.fileSig;
         this.Q = flag.Q;
         this.d = flag.d;
-        this.d = new BigInteger("55441196065363246126355624130324183196576709222340016572108097750006097525544");
 
 
         var stribog = new Hash(512);
@@ -32,12 +35,12 @@ public class Direct {
         var sign = new Sign();
 
         var signature = sign.signing(hash, d);
-        file.writer(signature);
+        file.writeSignature(signature, fileOut);
     }
 
     private void verification() throws IOException {
         var ver = new Verify();
-        var sign = file.signReader("signature.sgn");
+        var sign = file.signReader(fileSig);
 
         var check = ver.check(sign, Q, hash);
         if (check)

@@ -41,8 +41,13 @@ public class Verify {
      * см. Шаг 1
      */
     private void extraction() {
-        r = new BigInteger(sign.substring(0, Constants.p.bitLength() / 4), 16);
-        s = new BigInteger(sign.substring(Constants.p.bitLength() / 4), 16);
+        try {
+            r = new BigInteger(sign.substring(0, Constants.p.bitLength() / 4), 16);
+            s = new BigInteger(sign.substring(Constants.p.bitLength() / 4), 16);
+        }
+        catch (NumberFormatException e) {
+            // err
+        }
     }
 
     /**

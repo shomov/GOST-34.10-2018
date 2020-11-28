@@ -4,13 +4,20 @@ import signature.Point;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FileManager {
+
+    boolean fileCheck(String path) {
+        var fInput = Paths.get(path);
+        if (Files.notExists(fInput.toAbsolutePath()) || !Files.isRegularFile(fInput.toAbsolutePath())) {
+            //исключение
+            return false;
+        }
+        return true;
+    }
 
     ArrayList<BigInteger> keyReader(String path) throws IOException {
         var fr = new FileReader(path);
@@ -44,8 +51,8 @@ public class FileManager {
         return reader.readLine();
     }
 
-    void writer (String signature) {
-        try(var writer = new FileWriter("signature.sgn", false)) {
+    void writeSignature(String signature, String fileOut) {
+        try(var writer = new FileWriter(fileOut, false)) {
             writer.write(signature);
             writer.flush();
         }

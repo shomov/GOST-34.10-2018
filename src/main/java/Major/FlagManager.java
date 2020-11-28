@@ -2,8 +2,7 @@ package Major;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -18,7 +17,7 @@ public class FlagManager {
     Point Q = Point.POINT_INFINITY;
 
     FileManager file = new FileManager();
-    //MessageManager msg = new MessageManager();
+    MessageManager msg = new MessageManager();
 
     @Option(name = "-h")
     boolean help;
@@ -28,6 +27,9 @@ public class FlagManager {
 
     @Option(name = "-m")
     String fileMessage = "";
+
+    @Option(name = "-sig")
+    String fileSig = "";
 
     @Option(name = "-s")
     String filePrivateKey = "";
@@ -51,13 +53,13 @@ public class FlagManager {
 
         }
 
-        if (fileD != "") {
-            if (outputFileName == "") {
+        if (!fileD.equals("")) {
+            if (outputFileName.equals("")) {
                 //err должен быть исходящий путь
             }
 
-            fileCheck(outputFileName);
-            fileCheck(fileD);
+            file.fileCheck(outputFileName);
+            file.fileCheck(fileD);
             filePrivateKey = fileD;
             setPrivateKey();
             createQ();
@@ -65,21 +67,24 @@ public class FlagManager {
 
         }
 
-        if (fileMessage != ""){
-            fileCheck(fileMessage);
+        if (!fileMessage.equals("")){
+            file.fileCheck(fileMessage);
         }
         else {
             //err
         }
 
         if (!filePrivateKey.equals("")) {
-            if (fileCheck(filePrivateKey)) {
+            if (outputFileName == null) {
+                setPathOut();
+            }
+            if (file.fileCheck(filePrivateKey)) {
                 setPrivateKey();
             }
 
         }
-        else if (!fileVerKey.equals("")) {
-            if (fileCheck(fileVerKey)) {
+        else if (!fileVerKey.equals("") && !fileSig.equals("")) {
+            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) {
                 setQ();
             }
         }
@@ -111,8 +116,7 @@ public class FlagManager {
             //ошибка файла
         }
         Q = new Point(list.get(0), list.get(1));
-//        Q.setX(list.get(0));
-//        Q.setY(list.get(1));
+
     }
 
     public void createQ() {
@@ -120,17 +124,15 @@ public class FlagManager {
         file.writePublicKey(curveOperation.scalar(d, Constants.P), outputFileName);
     }
 
-    private boolean fileCheck(String path) {
-        var fInput = Paths.get(path);
-        if (Files.notExists(fInput.toAbsolutePath()) || !Files.isRegularFile(fInput.toAbsolutePath())) {
-            //исключение
-            return false;
-        }
-        return true;
-    }
 
-    void setPathOut (boolean custom) throws Exception {
- //       FileManager file = new FileManager();
- //      pathOut = file.creator(approach, pathOut, custom);
+
+    void setPathOut() {
+        outputFileName = fileMessage + ".sig";
+        if (file.fileCheck(outputFileName)) {
+            //err надо задать путь
+            System.err.println("path!");
+            System.exit(1);
+        }
+
     }
 }
