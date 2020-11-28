@@ -4,6 +4,8 @@
 
 package signature;
 
+import Major.MessageManager;
+
 import java.math.BigInteger;
 
 /**
@@ -18,6 +20,7 @@ public class Verify {
     private BigInteger s;
     private BigInteger e;
 
+    MessageManager msg = new MessageManager();
 
     public boolean check (String sign, Point Q, BigInteger hash) {
         this.sign = sign;
@@ -46,7 +49,7 @@ public class Verify {
             s = new BigInteger(sign.substring(Constants.p.bitLength() / 4), 16);
         }
         catch (NumberFormatException e) {
-            // err
+            msg.basicErrors(2);
         }
     }
 

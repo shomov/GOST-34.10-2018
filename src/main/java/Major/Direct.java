@@ -15,17 +15,20 @@ public class Direct {
     BigInteger hash;
 
     FileManager file = new FileManager();
+    MessageManager msg = new MessageManager();
 
-    public Direct(FlagManager flag) throws IOException {
+    public Direct(FlagManager flag) {
         this.fileMessage = flag.fileMessage;
         this.fileOut = flag.outputFileName;
         this.fileSig = flag.fileSig;
         this.Q = flag.Q;
         this.d = flag.d;
 
+        var message = file.messageReader(fileMessage);
+        if (message.length == 0) msg.IOerrors(2, fileMessage);
 
         var stribog = new Hash(512);
-        this.hash = stribog.getHash(file.messageReader(fileMessage));
+        this.hash = stribog.getHash(message);
         if (Q.getX() == null) signing();
         else verification();
 
@@ -38,15 +41,17 @@ public class Direct {
         file.writeSignature(signature, fileOut);
     }
 
-    private void verification() throws IOException {
+    private void verification() {
         var ver = new Verify();
         var sign = file.signReader(fileSig);
 
+        if (sign.equals("")) msg.IOerrors(3, fileSig);
+
         var check = ver.check(sign, Q, hash);
         if (check)
-            System.out.println("Подпись успешно прошла проверку");
+            msg.status(2);
         else
-            System.out.println("Подпись не верна!");
+            msg.status(3);
     }
 
 }

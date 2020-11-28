@@ -5,23 +5,12 @@
 import Major.Direct;
 import Major.FlagManager;
 
-
 public class Main {
 
-
-
-    public static void main(String[] args) throws Exception {
-
-
-
+    public static void main(String[] args) {
         var flag = new FlagManager();
         flag.parsing(args);
         new Direct(flag);
-
         flag.parsing(args);
-
-
     }
-
-
 }

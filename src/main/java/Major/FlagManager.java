@@ -1,15 +1,13 @@
 package Major;
 
-import java.io.IOException;
-import java.math.BigInteger;
-
-
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import signature.Constants;
 import signature.EllipticCurve;
 import signature.Point;
+
+import java.math.BigInteger;
 
 
 public class FlagManager {
@@ -21,6 +19,9 @@ public class FlagManager {
 
     @Option(name = "-h")
     boolean help;
+
+    @Option(name = "-p")
+    boolean parameters;
 
     @Option(name = "-q")
     String fileD = "";
@@ -40,80 +41,55 @@ public class FlagManager {
     @Option(name = "-o")
     String outputFileName;
 
-    public void parsing(String[] args) throws Exception {
+    public void parsing(String[] args) {
         final var parser = new CmdLineParser(this);
+        msg.status(String.join(" ", args));
         try {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
-
+            msg.basicErrors(0);
         }
 
+        if (help) msg.status(0);
 
-        if (help) {
-
-        }
+        if (parameters) msg.status(1);
 
         if (!fileD.equals("")) {
-            if (outputFileName.equals("")) {
-                //err должен быть исходящий путь
-            }
-
-            file.fileCheck(outputFileName);
-            file.fileCheck(fileD);
+            if (outputFileName.equals("")) msg.basicErrors(1);
+            if (file.fileCheck(outputFileName)) msg.IOerrors(1, outputFileName);
+            if (!file.fileCheck(fileD)) msg.IOerrors(0, fileD);
             filePrivateKey = fileD;
             setPrivateKey();
             createQ();
-            System.exit(0);
-
+            msg.IOstatus(0, outputFileName);
         }
 
-        if (!fileMessage.equals("")){
-            file.fileCheck(fileMessage);
-        }
-        else {
-            //err
-        }
+        if (fileMessage.equals("")) msg.basicErrors(0);
+        else if (!file.fileCheck(fileMessage)) msg.IOerrors(0, fileMessage);
 
         if (!filePrivateKey.equals("")) {
-            if (outputFileName == null) {
-                setPathOut();
-            }
-            if (file.fileCheck(filePrivateKey)) {
-                setPrivateKey();
-            }
-
+            if (outputFileName == null) setPathOut();
+            if (file.fileCheck(filePrivateKey)) setPrivateKey();
         }
         else if (!fileVerKey.equals("") && !fileSig.equals("")) {
-            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) {
-                setQ();
-            }
+            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
         }
-        else {
-            //err
-        }
+        else msg.basicErrors(0);
 
-//        if (outputFileName != null && fileVerKey == null)
-//            pathOut = outputFileName;
-//        else if (outputFileName == null)
-//            pathOut = null;
-//        else{
-//            //err
-//        }
-//        setPathOut(outputFileName != null);
     }
 
-    private void setPrivateKey() throws IOException {
+    private void setPrivateKey() {
         var list = file.keyReader(filePrivateKey);
         if (list.size() != 1){
-            //ошибка файла
+            msg.IOerrors(2, filePrivateKey);
         }
         d = list.get(0);
     }
 
-    private void setQ() throws IOException {
+    private void setQ() {
         var list = file.keyReader(fileVerKey);
         if (list.size() != 2){
-            //ошибка файла
+            msg.IOerrors(2, fileVerKey);
         }
         Q = new Point(list.get(0), list.get(1));
 
@@ -125,14 +101,8 @@ public class FlagManager {
     }
 
 
-
     void setPathOut() {
         outputFileName = fileMessage + ".sig";
-        if (file.fileCheck(outputFileName)) {
-            //err надо задать путь
-            System.err.println("path!");
-            System.exit(1);
-        }
-
+        if (file.fileCheck(outputFileName)) msg.IOerrors(1, outputFileName);
     }
 }
