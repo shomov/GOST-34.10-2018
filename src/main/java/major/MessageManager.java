@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package major;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,6 +36,7 @@ public class MessageManager {
             default:
                 System.err.println("Применение несанкционированного кода сообщения!");
                 log.error("Unauthorized message code");
+                break;
         }
         System.exit(0);
     }
@@ -53,11 +58,12 @@ public class MessageManager {
             default:
                 System.err.println("Применение несанкционированного кода ошибки!");
                 log.error("Unauthorized error code");
+                break;
         }
         System.exit(1);
     }
 
-    public void IOstatus(int code, String path) {
+    public void statusIO(int code, String path) {
         switch (code) {
             case (0):
                 System.out.println("Публичный ключ успешно записан в файл " + path);
@@ -71,11 +77,12 @@ public class MessageManager {
                 System.err.println("Применение несанкционированного кода сообщения!");
                 log.error("Unauthorized message code");
                 System.exit(1);
+                break;
         }
         System.exit(0);
     }
 
-    public void IOerrors(int code, String path) {
+    public void errorsIO(int code, String path) {
         switch (code) {
             case (0):
                 System.out.println("Файл отсутствует " + path);
@@ -100,6 +107,7 @@ public class MessageManager {
             default:
                 System.err.println("Применение несанкционированного кода сообщения!");
                 log.error("Unauthorized message code");
+                break;
         }
         System.exit(1);
     }

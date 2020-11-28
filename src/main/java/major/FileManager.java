@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package major;
 
 import signature.Point;
@@ -30,7 +34,7 @@ public class FileManager {
             }
 
         } catch (IOException exception) {
-            msg.IOerrors(3, path);
+            msg.errorsIO(3, path);
         }
         return result;
     }
@@ -45,7 +49,7 @@ public class FileManager {
 
             return dataOut;
         } catch (IOException exception) {
-            msg.IOerrors(3, path);
+            msg.errorsIO(3, path);
         }
         return new int[0];
     }
@@ -56,7 +60,7 @@ public class FileManager {
             var reader = new BufferedReader(fr);
             return reader.readLine();
         } catch (IOException exception) {
-            msg.IOerrors(3, path);
+            msg.errorsIO(3, path);
         }
         return "";
     }
@@ -65,7 +69,7 @@ public class FileManager {
         try(var writer = new FileWriter(fileOut, false)) {
             writer.write(signature);
             writer.flush();
-            msg.IOstatus(1, fileOut);
+            msg.statusIO(1, fileOut);
         }
         catch(IOException ex){
             System.out.println(ex.getMessage());
@@ -79,9 +83,9 @@ public class FileManager {
             writer.write(Q.getX().toString() + newLine);
             writer.write(Q.getY().toString());
             writer.flush();
-            msg.IOstatus(0, file);
+            msg.statusIO(0, file);
         } catch (IOException e) {
-            msg.IOerrors(4, file);
+            msg.errorsIO(4, file);
         }
 
     }

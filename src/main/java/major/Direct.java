@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package major;
 
 import signature.*;
@@ -23,7 +27,7 @@ public class Direct {
         this.d = flag.d;
 
         var message = file.messageReader(fileMessage);
-        if (message.length == 0) msg.IOerrors(2, fileMessage);
+        if (message.length == 0) msg.errorsIO(2, fileMessage);
 
         var stribog = new Hash(512);
         this.hash = stribog.getHash(message);
@@ -43,7 +47,7 @@ public class Direct {
         var ver = new Verify();
         var sign = file.signReader(fileSig);
 
-        if (sign.equals("")) msg.IOerrors(3, fileSig);
+        if (sign.equals("")) msg.errorsIO(3, fileSig);
 
         var check = ver.check(sign, Q, hash);
         if (check)

@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
 package major;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -56,16 +60,16 @@ public class FlagManager {
 
         if (!fileD.equals("")) {
             if (outputFileName.equals("")) msg.basicErrors(1);
-            if (file.fileCheck(outputFileName)) msg.IOerrors(1, outputFileName);
-            if (!file.fileCheck(fileD)) msg.IOerrors(0, fileD);
+            if (file.fileCheck(outputFileName)) msg.errorsIO(1, outputFileName);
+            if (!file.fileCheck(fileD)) msg.errorsIO(0, fileD);
             filePrivateKey = fileD;
             setPrivateKey();
             createQ();
-            msg.IOstatus(0, outputFileName);
+            msg.statusIO(0, outputFileName);
         }
 
         if (fileMessage.equals("")) msg.basicErrors(0);
-        else if (!file.fileCheck(fileMessage)) msg.IOerrors(0, fileMessage);
+        else if (!file.fileCheck(fileMessage)) msg.errorsIO(0, fileMessage);
 
         if (!filePrivateKey.equals("")) {
             if (outputFileName == null) setPathOut();
@@ -81,7 +85,7 @@ public class FlagManager {
     private void setPrivateKey() {
         var list = file.keyReader(filePrivateKey);
         if (list.size() != 1){
-            msg.IOerrors(2, filePrivateKey);
+            msg.errorsIO(2, filePrivateKey);
         }
         d = list.get(0);
     }
@@ -89,7 +93,7 @@ public class FlagManager {
     private void setQ() {
         var list = file.keyReader(fileVerKey);
         if (list.size() != 2){
-            msg.IOerrors(2, fileVerKey);
+            msg.errorsIO(2, fileVerKey);
         }
         Q = new Point(list.get(0), list.get(1));
 
@@ -103,6 +107,6 @@ public class FlagManager {
 
     void setPathOut() {
         outputFileName = fileMessage + ".sig";
-        if (file.fileCheck(outputFileName)) msg.IOerrors(1, outputFileName);
+        if (file.fileCheck(outputFileName)) msg.errorsIO(1, outputFileName);
     }
 }
