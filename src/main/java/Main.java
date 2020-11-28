@@ -2,8 +2,8 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-import Major.Direct;
-import Major.FlagManager;
+import major.Direct;
+import major.FlagManager;
 
 public class Main {
 

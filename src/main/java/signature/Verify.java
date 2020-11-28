@@ -4,7 +4,7 @@
 
 package signature;
 
-import Major.MessageManager;
+import major.MessageManager;
 
 import java.math.BigInteger;
 

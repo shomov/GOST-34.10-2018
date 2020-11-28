@@ -1,4 +1,4 @@
-package Major;
+package major;
 
 import signature.Point;
 

@@ -1,4 +1,4 @@
-package Major;
+package major;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;

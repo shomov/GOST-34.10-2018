@@ -1,9 +1,8 @@
-package Major;
+package major;
 
 import signature.*;
 import stribog.Hash;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 public class Direct {
