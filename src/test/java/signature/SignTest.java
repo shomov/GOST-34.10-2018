@@ -36,7 +36,7 @@ class SignTest {
             var sign = new Sign();
             var d = randomKey();
             var key = sign.signing(ar512, d);
-            var Q = curveOperation.scalar(d, Constants.P);
+            var Q = curveOperation.scalar(d, SignatureConstants.P);
 
             // верификация
             var ver = check.check(key, Q, ar512);
@@ -60,16 +60,15 @@ class SignTest {
         var sign = new Sign();
         var d = randomKey();
         var key = sign.signing(ar512, d);
-        var Q = curveOperation.scalar(d, Constants.P);
+        var Q = curveOperation.scalar(d, SignatureConstants.P);
 
         var test = false;
 
         for (var i = 0; i < testIterations; i++) {
             var rand = new Random();
-            var msg = message;
-            msg[rand.nextInt(message.length)] = rand.nextInt(256);
+            message[rand.nextInt(message.length)] = rand.nextInt(256);
 
-            var ar512W = stribog512_1.getHash(msg);
+            var ar512W = stribog512_1.getHash(message);
 
             var ver = check.check(key, Q,ar512W);
             if (ver){
@@ -89,7 +88,7 @@ class SignTest {
         var check = new Verify();
         var ar512 = stribog512_1.getHash(randomMessage());
         var d = randomKey();
-        var Q = curveOperation.scalar(d, Constants.P);
+        var Q = curveOperation.scalar(d, SignatureConstants.P);
         var sign = new Sign();
         var test = false;
 
@@ -128,7 +127,7 @@ class SignTest {
         var ar512 = stribog512_1.getHash(randomMessage());
         var sign = new Sign();
         var key = sign.signing(ar512, d);
-        var Q = curveOperation.scalar(d, Constants.P);
+        var Q = curveOperation.scalar(d, SignatureConstants.P);
 
         var test = false;
 
@@ -162,7 +161,7 @@ class SignTest {
 
     private BigInteger randomKey() {
         var rand = new Random();
-        return new BigInteger(Constants.q.bitLength(), rand);
+        return new BigInteger(SignatureConstants.q.bitLength(), rand);
     }
 
 

@@ -21,7 +21,7 @@ public class Sign {
 
     public String signing (BigInteger hash, BigInteger d){
         this.d = d;
-        e = hash.mod(Constants.q);
+        e = hash.mod(SignatureConstants.q);
         if (e.equals(BigInteger.ZERO))
             e = BigInteger.ONE;
         randK();
@@ -33,9 +33,9 @@ public class Sign {
     // см. (16) Стандарта
     private void randK(){
         var rand = new Random();
-        k = new BigInteger(Constants.q.bitLength(), rand);
-        while (k.compareTo(Constants.q) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
-            k = new BigInteger(Constants.q.bitLength(), rand);
+        k = new BigInteger(SignatureConstants.q.bitLength(), rand);
+        while (k.compareTo(SignatureConstants.q) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
+            k = new BigInteger(SignatureConstants.q.bitLength(), rand);
         genC();
     }
 
@@ -43,20 +43,20 @@ public class Sign {
     // см. Шаг 4
     private void genC (){
         var curveOperation = new EllipticCurve();
-        var pnt = curveOperation.scalar(k, Constants.P);
+        var pnt = curveOperation.scalar(k, SignatureConstants.P);
         setR(pnt);
     }
 
     // см. (17)
     private void setR (Point C) {
-        r = C.getX().mod(Constants.q);
+        r = C.getX().mod(SignatureConstants.q);
         if (r.equals(BigInteger.ZERO))
             randK();
     }
 
     // см. (18)
     private void calcS() {
-        s = ((r.multiply(d)).add(k.multiply(e))).mod(Constants.q);
+        s = ((r.multiply(d)).add(k.multiply(e))).mod(SignatureConstants.q);
         if (s.equals(BigInteger.ZERO))
             randK();
     }
@@ -64,7 +64,7 @@ public class Sign {
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
     private String completion (BigInteger num) {
         var str = new StringBuilder(num.toString(16));
-        while (str.length() != Constants.p.bitLength() / 4) //1 цифра кодируется 4 битами
+        while (str.length() != SignatureConstants.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
         return str.toString();
     }

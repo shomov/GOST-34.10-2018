@@ -13,12 +13,12 @@ import java.util.Arrays;
  *  "http://protect.gost.ru/v.aspx?control=7&id=232143"
  */
 public class Hash {
-    private boolean length;
-    private final int[] iv;
-    private int[] N;
-    private int[] Sigma;
+    private boolean method = true;
+    private final int[] iv = new int[64];
+    private int[] N = new int[64];
+    private int[] sig = new int[64];
 
-    Constants constants = new Constants();
+    StribogConstants stribogConstants = new StribogConstants();
 
     /**
      * Инициализация хэш-функции, установка начальных значений
@@ -27,18 +27,14 @@ public class Hash {
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     public Hash(int length) {
-        this.length = true;
-        this.iv = new int[64];
-        this.N = new int[64];
-        this.Sigma = new int[64];
         var a = 0x00;
         if (length == 256) {
-            this.length = false;
+            this.method = false;
             a = 0x01;
         }
         for (var i = 0; i < 64; i++) {
             N[i] = 0x00;
-            Sigma[i] = 0x00;
+            sig[i] = 0x00;
             iv[i] = a;
         }
     }
@@ -52,13 +48,14 @@ public class Hash {
         while (l > 64) {
             System.arraycopy(message, l - 64, m, 0, 64);
             h = gN(h, m);
-            N = ringAdd(N, constants.numByte(512 / 8));
-            Sigma = ringAdd(Sigma, m);
+            N = ringAdd(N, stribogConstants.numByte(512 / 8));
+            sig = ringAdd(sig, m);
             l -= 64;
         }
         m = Arrays.copyOfRange(message, message.length - l, message.length);
 
         //выполняется сдвиг массива вправо, а оставшееся пространство заполняется нулями, а перед началом оставшегося массива - единицей
+        //описывается шагом 3.1 настоящего стандарта
         if (l != 64){
             var shift = new int[64];
             Arrays.fill(shift, 0x00);
@@ -68,20 +65,18 @@ public class Hash {
         }
 
         h = gN(h, m);
-
-        N = ringAdd(N, constants.numByte(l));
-        Sigma = ringAdd(Sigma, m);
+        N = ringAdd(N, stribogConstants.numByte(l));
+        sig = ringAdd(sig, m);
         h = g0(h, N);
-        h = g0(h, Sigma);
+        h = g0(h, sig);
 
-        if (length) return new BigInteger(int2byte(h));
-
+        if (method)
+            return new BigInteger(int2byte(h));
         else {
             var h256 = new int[32];
             System.arraycopy(h, 0, h256, 0, 32);
             return new BigInteger(int2byte(h256));
         }
-
     }
 
     /**
@@ -102,7 +97,7 @@ public class Hash {
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] g0(int[] h, int[] m) {
-        var LPS = L(P(S(xFun(h, constants.numByte(0)))));
+        var LPS = L(P(S(xFun(h, stribogConstants.numByte(0)))));
         return xFun(xFun(E(LPS, m), h), m);
     }
 
@@ -121,7 +116,7 @@ public class Hash {
         var result = xFun(k, m);
         var tempKey = k;
         for (var i = 0; i < 12; i++) {
-            tempKey = L(P(S(xFun(tempKey, constants.C[i]))));
+            tempKey = L(P(S(xFun(tempKey, stribogConstants.C[i]))));
             result = xFun(L(P(S(result))), tempKey);
         }
         return result;
@@ -140,31 +135,30 @@ public class Hash {
 
     /**
      * Функция подстановки. Каждому элементу массива лежащему в диапазоне от 0 до 255 соотвествует значение таблицы замещения с соответствующем значению порядковым номером http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=8A5E965D-A695-4C6C-9DC0-76EFE1C804D5
-     * @see Constants#substitution
+     * @see StribogConstants#substitution
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] S (int[] val) {
         var result = new int[64];
-        Arrays.fill(result, 0);
-        for (var i = 0; i < 64; i++) result[i] = constants.substitution[val[i]];
+        for (var i = 0; i < 64; i++) result[i] = stribogConstants.substitution[val[i]];
         return result;
     }
 
     /**
      * Функция перестановки. Входные значения возвращаются функцией в порядке, установленном таблицей перестановок
-     * @see Constants#t
+     * @see StribogConstants#t
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] P (int[] val) {
         var result = new int[64];
-        for (var i = 0; i < 64; i++) result[i] = val[constants.t[i]];
+        for (var i = 0; i < 64; i++) result[i] = val[stribogConstants.t[i]];
         return result;
     }
 
     /**
      * Функция линейного преобразования
      * @param val разбивается на блоки по 8 байт, каждому биту соотносится строка из A
-     * @see Constants#A
+     * @see StribogConstants#A
      * Затем проверяется значение бита, если 1, то выполняется операция XOR над результирующей строкой и строкой массива A
      *
      */
@@ -175,21 +169,22 @@ public class Hash {
                 for(var k = 0; k < 8; k++)
                     if ((val[i * 8 + j] & (1 << Math.abs(k - 7))) != 0)
                         for (var l = 0; l < 8; l++)
-                            result[8 * i + l] ^= constants.A[j * 8 + k][l];
+                            result[8 * i + l] ^= stribogConstants.A[j * 8 + k][l];
         return result;
     }
 
     // https://stackoverflow.com/questions/2183240/java-integer-to-byte-array
-    public static byte[] int2byte(int[] src) {
+    private byte[] int2byte(int[] src) {
         var srcLength = src.length;
         var dst = new byte[srcLength << 2];
         for (var i = 0; i < srcLength; i++) {
             var x = src[i];
             var j = i << 2;
-            dst[j++] = (byte) ((x) & 0xff);
-            dst[j++] = (byte) ((x >>> 8) & 0xff);
-            dst[j++] = (byte) ((x >>> 16) & 0xff);
-            dst[j++] = (byte) ((x >>> 24) & 0xff);
+            dst[j] = (byte) ((x) & 0xff);
+            j++;
+            dst[j] = (byte) ((x >>> 8) & 0xff);
+            dst[j] = (byte) ((x >>> 16) & 0xff);
+            dst[j] = (byte) ((x >>> 24) & 0xff);
         }
         return dst;
     }

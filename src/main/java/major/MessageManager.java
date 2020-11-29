@@ -6,7 +6,7 @@ package major;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import signature.Constants;
+import signature.SignatureConstants;
 
 public class MessageManager {
     Logger log = LogManager.getLogger(MessageManager.class.getName());
@@ -114,13 +114,13 @@ public class MessageManager {
 
     private String curveSettings() {
         return "Параметры эллиптической кривой \n" +
-                "p = " + Constants.p + " (модуль эллиптической кривой)\n" +
-                "a = " + Constants.a + " (коэффициент эллиптичекой кривой)\n" +
-                "b = " + Constants.b + " (коэффициент эллиптичекой кривой)\n" +
-                "m = " + Constants.m + " (порядок группы точек эллиптической кривой)\n" +
-                "q = " + Constants.q + " (порядок циклической подгруппы группы точек эллиптической кривой)\n" +
-                "Xp = " + Constants.xp + " (коэффициент точки эллиптической кривой)\n" +
-                "Yp = " + Constants.yp + " (коэффициент точки эллиптичекой кривой)\n";
+                "p = " + SignatureConstants.p + " (модуль эллиптической кривой)\n" +
+                "a = " + SignatureConstants.a + " (коэффициент эллиптичекой кривой)\n" +
+                "b = " + SignatureConstants.b + " (коэффициент эллиптичекой кривой)\n" +
+                "m = " + SignatureConstants.m + " (порядок группы точек эллиптической кривой)\n" +
+                "q = " + SignatureConstants.q + " (порядок циклической подгруппы группы точек эллиптической кривой)\n" +
+                "Xp = " + SignatureConstants.xp + " (коэффициент точки эллиптической кривой)\n" +
+                "Yp = " + SignatureConstants.yp + " (коэффициент точки эллиптичекой кривой)\n";
     }
 
     private String help() {

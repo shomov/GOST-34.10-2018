@@ -28,13 +28,10 @@ public class Verify {
         this.hash = hash;
 
         extraction();
-
-        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(Constants.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(Constants.q) >= 0 )
+        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(SignatureConstants.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(SignatureConstants.q) >= 0 )
             return false;
-
         calcE();
-
-        var R = calcC().getX().mod(Constants.q);
+        var R = calcC().getX().mod(SignatureConstants.q);
 
         return R.compareTo(r) == 0;
     }
@@ -45,8 +42,8 @@ public class Verify {
      */
     private void extraction() {
         try {
-            r = new BigInteger(sign.substring(0, Constants.p.bitLength() / 4), 16);
-            s = new BigInteger(sign.substring(Constants.p.bitLength() / 4), 16);
+            r = new BigInteger(sign.substring(0, SignatureConstants.p.bitLength() / 4), 16);
+            s = new BigInteger(sign.substring(SignatureConstants.p.bitLength() / 4), 16);
         }
         catch (NumberFormatException e) {
             msg.basicErrors(2);
@@ -59,7 +56,7 @@ public class Verify {
      */
     private void calcE() {
         var alpha = hash;
-        e = alpha.mod(Constants.q);
+        e = alpha.mod(SignatureConstants.q);
         if (e.compareTo(BigInteger.ZERO) == 0)
             e = BigInteger.ONE;
     }
@@ -69,12 +66,12 @@ public class Verify {
      * см. Шаг 5-6
      */
     private Point calcC() {
-        var v = e.modInverse(Constants.q);
-        var z1 = (s.multiply(v)).mod(Constants.q);
-        var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(Constants.q);
+        var v = e.modInverse(SignatureConstants.q);
+        var z1 = (s.multiply(v)).mod(SignatureConstants.q);
+        var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(SignatureConstants.q);
 
         var curveOperation = new EllipticCurve();
-        return curveOperation.sum(curveOperation.scalar(z1, Constants.P), curveOperation.scalar(z2, Q));
+        return curveOperation.sum(curveOperation.scalar(z1, SignatureConstants.P), curveOperation.scalar(z2, Q));
     }
 
 }

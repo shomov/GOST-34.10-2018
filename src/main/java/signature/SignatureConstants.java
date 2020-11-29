@@ -11,7 +11,7 @@ import java.math.BigInteger;
  * Базовые параметры эллиптической кривой
  * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=8E69DFE1-1A5C-4CF4-A10C-9C35E90341F2
  */
-public class Constants {
+public class SignatureConstants {
     // Модуль эллиптической кривой
     public static final BigInteger p = new BigInteger("57896044618658097711785492504343953926634992332820282019728792003956564821041");
     // Коэффициенты эллиптичекой кривой

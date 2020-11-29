@@ -6,7 +6,7 @@ package stribog;
 
 import java.util.Arrays;
 
-class Constants {
+class StribogConstants {
 
   /**
    * Представление числа 64 байтами

@@ -7,7 +7,7 @@ package major;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import signature.Constants;
+import signature.SignatureConstants;
 import signature.EllipticCurve;
 import signature.Point;
 
@@ -15,8 +15,9 @@ import java.math.BigInteger;
 
 
 public class FlagManager {
+    Point point = new Point();
     BigInteger d;
-    Point Q = Point.POINT_INFINITY;
+    Point Q = point.POINT_INFINITY;
 
     FileManager file = new FileManager();
     MessageManager msg = new MessageManager();
@@ -99,7 +100,7 @@ public class FlagManager {
 
     public void createQ() {
         var curveOperation = new EllipticCurve();
-        file.writePublicKey(curveOperation.scalar(d, Constants.P), outputFileName);
+        file.writePublicKey(curveOperation.scalar(d, SignatureConstants.P), outputFileName);
     }
 
 
