@@ -11,7 +11,7 @@ public class Point {
     final private BigInteger x;
     final private BigInteger y;
 
-    public final Point POINT_INFINITY = new Point();
+    public static Point POINT_INFINITY = new Point();
 
     public Point(BigInteger x, BigInteger y) {
         this.x = x;

@@ -8,7 +8,6 @@ import java.math.BigInteger;
 
 public class EllipticCurve {
 
-    Point point = new Point();
 
     /**
      * Реализация скалярного произведения точки эллиптической кривой на число
@@ -17,7 +16,7 @@ public class EllipticCurve {
      * https://habr.com/ru/post/335906/
      */
     public Point scalar (BigInteger k, Point point) {
-        var result = point.POINT_INFINITY;
+        var result = Point.POINT_INFINITY;
         var bits = new int[k.bitLength()];
 
         var c = k;
@@ -44,9 +43,9 @@ public class EllipticCurve {
      * https://stackoverflow.com/questions/15727147/scalar-multiplication-of-point-over-elliptic-curve
      */
     public Point sum (Point a, Point b) {
-        if (b.equals(point.POINT_INFINITY))
+        if (b.equals(Point.POINT_INFINITY))
             return a;
-        else if (a.equals(point.POINT_INFINITY))
+        else if (a.equals(Point.POINT_INFINITY))
             return b;
         BigInteger x;
         BigInteger y;

@@ -15,9 +15,8 @@ import java.math.BigInteger;
 
 
 public class FlagManager {
-    Point point = new Point();
     BigInteger d;
-    Point Q = point.POINT_INFINITY;
+    Point Q = Point.POINT_INFINITY;
 
     FileManager file = new FileManager();
     MessageManager msg = new MessageManager();
