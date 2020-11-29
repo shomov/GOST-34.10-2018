@@ -7,6 +7,11 @@ package signature;
 import java.math.BigInteger;
 
 public class EllipticCurve {
+    SignatureParameters parameters;
+
+    public EllipticCurve (SignatureParameters parameters) {
+        this.parameters = parameters;
+    }
 
 
     /**
@@ -50,14 +55,14 @@ public class EllipticCurve {
         BigInteger x;
         BigInteger y;
         if (b.equals(a)) {
-            var lambda = (((a.getX().pow(2)).multiply(BigInteger.valueOf(3))).add(SignatureConstants.a)).multiply((a.getY().multiply(BigInteger.TWO)).modInverse(SignatureConstants.p));
-            x = ((lambda.pow(2).subtract(a.getX().multiply(BigInteger.TWO))).mod(SignatureConstants.p));
-            y = ((lambda.multiply(a.getX().subtract(x))).mod(SignatureConstants.p).subtract(a.getY()));
+            var lambda = (((a.getX().pow(2)).multiply(BigInteger.valueOf(3))).add(parameters.a)).multiply((a.getY().multiply(BigInteger.TWO)).modInverse(parameters.p));
+            x = ((lambda.pow(2).subtract(a.getX().multiply(BigInteger.TWO))).mod(parameters.p));
+            y = ((lambda.multiply(a.getX().subtract(x))).mod(parameters.p).subtract(a.getY()));
         }
         else {
-            var lambda = (b.getY().subtract(a.getY())).multiply(b.getX().subtract(a.getX()).modInverse(SignatureConstants.p));
-            x = (lambda.modPow(BigInteger.TWO, SignatureConstants.p).subtract(b.getX()).subtract(a.getX()).mod(SignatureConstants.p));
-            y = (((lambda.multiply(a.getX().subtract(x))).mod(SignatureConstants.p)).subtract((a.getY().mod(SignatureConstants.p))));
+            var lambda = (b.getY().subtract(a.getY())).multiply(b.getX().subtract(a.getX()).modInverse(parameters.p));
+            x = (lambda.modPow(BigInteger.TWO, parameters.p).subtract(b.getX()).subtract(a.getX()).mod(parameters.p));
+            y = (((lambda.multiply(a.getX().subtract(x))).mod(parameters.p)).subtract((a.getY().mod(parameters.p))));
         }
 
         return new Point(x, y);

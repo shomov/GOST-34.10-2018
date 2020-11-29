@@ -13,6 +13,7 @@ import java.math.BigInteger;
  * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=56ACFF06-585B-4C86-AFBB-70BAC6EE97D2
  */
 public class Verify {
+    private SignatureParameters parameters;
     private String sign;
     private Point Q;
     private BigInteger hash;
@@ -22,16 +23,17 @@ public class Verify {
 
     private final MessageManager msg = new MessageManager();
 
-    public boolean check (String sign, Point Q, BigInteger hash) {
+    public boolean check (String sign, Point Q, BigInteger hash, SignatureParameters para) {
+        this.parameters = para;
         this.sign = sign;
         this.Q = Q;
         this.hash = hash;
 
         extraction();
-        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(SignatureConstants.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(SignatureConstants.q) >= 0 )
+        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(parameters.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(parameters.q) >= 0 )
             return false;
         calcE();
-        var R = calcC().getX().mod(SignatureConstants.q);
+        var R = calcC().getX().mod(parameters.q);
 
         return R.compareTo(r) == 0;
     }
@@ -42,8 +44,8 @@ public class Verify {
      */
     private void extraction() {
         try {
-            r = new BigInteger(sign.substring(0, SignatureConstants.p.bitLength() / 4), 16);
-            s = new BigInteger(sign.substring(SignatureConstants.p.bitLength() / 4), 16);
+            r = new BigInteger(sign.substring(0, parameters.p.bitLength() / 4), 16);
+            s = new BigInteger(sign.substring(parameters.p.bitLength() / 4), 16);
         }
         catch (NumberFormatException e) {
             msg.basicErrors(2);
@@ -56,7 +58,7 @@ public class Verify {
      */
     private void calcE() {
         var alpha = hash;
-        e = alpha.mod(SignatureConstants.q);
+        e = alpha.mod(parameters.q);
         if (e.compareTo(BigInteger.ZERO) == 0)
             e = BigInteger.ONE;
     }
@@ -66,12 +68,12 @@ public class Verify {
      * см. Шаг 5-6
      */
     private Point calcC() {
-        var v = e.modInverse(SignatureConstants.q);
-        var z1 = (s.multiply(v)).mod(SignatureConstants.q);
-        var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(SignatureConstants.q);
+        var v = e.modInverse(parameters.q);
+        var z1 = (s.multiply(v)).mod(parameters.q);
+        var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(parameters.q);
 
-        var curveOperation = new EllipticCurve();
-        return curveOperation.sum(curveOperation.scalar(z1, SignatureConstants.P), curveOperation.scalar(z2, Q));
+        var curveOperation = new EllipticCurve(parameters);
+        return curveOperation.sum(curveOperation.scalar(z1, parameters.P), curveOperation.scalar(z2, Q));
     }
 
 }

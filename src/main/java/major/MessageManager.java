@@ -6,7 +6,6 @@ package major;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import signature.SignatureConstants;
 
 public class MessageManager {
     Logger log = LogManager.getLogger(MessageManager.class.getName());
@@ -21,10 +20,10 @@ public class MessageManager {
                 System.out.println(help());
                 log.info("help called");
                 break;
-            case (1):
-                System.out.println(curveSettings());
-                log.info("The requested parameters");
-                break;
+//            case (1):
+//                System.out.println(curveSettings());
+//                log.info("The requested parameters");
+//                break;
             case (2):
                 System.out.println("Подпись успешно прошла проверку");
                 log.info("The signature was verified");
@@ -112,16 +111,16 @@ public class MessageManager {
         System.exit(1);
     }
 
-    private String curveSettings() {
-        return "Параметры эллиптической кривой \n" +
-                "p = " + SignatureConstants.p + " (модуль эллиптической кривой)\n" +
-                "a = " + SignatureConstants.a + " (коэффициент эллиптичекой кривой)\n" +
-                "b = " + SignatureConstants.b + " (коэффициент эллиптичекой кривой)\n" +
-                "m = " + SignatureConstants.m + " (порядок группы точек эллиптической кривой)\n" +
-                "q = " + SignatureConstants.q + " (порядок циклической подгруппы группы точек эллиптической кривой)\n" +
-                "Xp = " + SignatureConstants.xp + " (коэффициент точки эллиптической кривой)\n" +
-                "Yp = " + SignatureConstants.yp + " (коэффициент точки эллиптичекой кривой)\n";
-    }
+//    private String curveSettings() {
+//        return "Параметры эллиптической кривой \n" +
+//                "p = " + SignatureConstants.p + " (модуль эллиптической кривой)\n" +
+//                "a = " + SignatureConstants.a + " (коэффициент эллиптичекой кривой)\n" +
+//                "b = " + SignatureConstants.b + " (коэффициент эллиптичекой кривой)\n" +
+//                "m = " + SignatureConstants.m + " (порядок группы точек эллиптической кривой)\n" +
+//                "q = " + SignatureConstants.q + " (порядок циклической подгруппы группы точек эллиптической кривой)\n" +
+//                "Xp = " + SignatureConstants.xp + " (коэффициент точки эллиптической кривой)\n" +
+//                "Yp = " + SignatureConstants.yp + " (коэффициент точки эллиптичекой кривой)\n";
+//    }
 
     private String help() {
         return "Справка\n " +

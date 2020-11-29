@@ -7,7 +7,7 @@ package major;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import signature.SignatureConstants;
+import signature.SignatureParameters;
 import signature.EllipticCurve;
 import signature.Point;
 
@@ -20,12 +20,13 @@ public class FlagManager {
 
     FileManager file = new FileManager();
     MessageManager msg = new MessageManager();
+    SignatureParameters parameters = new SignatureParameters();
 
     @Option(name = "-h")
     boolean help;
 
     @Option(name = "-p")
-    boolean parameters;
+    String fileParameters = "";
 
     @Option(name = "-q")
     String fileD = "";
@@ -45,7 +46,7 @@ public class FlagManager {
     @Option(name = "-o")
     String outputFileName;
 
-    public void parsing(String[] args) {
+    public SignatureParameters parsing(String[] args) {
         final var parser = new CmdLineParser(this);
         msg.status(String.join(" ", args));
         try {
@@ -56,7 +57,10 @@ public class FlagManager {
 
         if (help) msg.status(0);
 
-        if (parameters) msg.status(1);
+        if (!fileParameters.equals(""))  {
+            if (!file.fileCheck(fileParameters)) msg.errorsIO(0, fileParameters);
+            setParameters();
+        }
 
         if (!fileD.equals("")) {
             if (outputFileName.equals("")) msg.basicErrors(1);
@@ -80,16 +84,31 @@ public class FlagManager {
         }
         else msg.basicErrors(0);
 
+        return parameters;
+    }
+
+    private void setParameters() {
+        var list = file.stringReader(fileParameters);
+        try {
+            var a = false;
+            if (list.get(0).equals(new BigInteger("512"))) a = true;
+            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(2, fileParameters);
+            parameters.setConstants(a,
+                    list.get(1), list.get(2), list.get(3), list.get(4),
+                    list.get(5), list.get(6), list.get(7));
+        } catch (Exception exception) {
+            msg.errorsIO(2, fileParameters);
+        }
     }
 
     private void setPrivateKey() {
-        var list = file.keyReader(filePrivateKey);
+        var list = file.stringReader(filePrivateKey);
         if (list.size() != 1) msg.errorsIO(2, filePrivateKey);
         d = list.get(0);
     }
 
     private void setQ() {
-        var list = file.keyReader(fileVerKey);
+        var list = file.stringReader(fileVerKey);
         if (list.size() != 2){
             msg.errorsIO(2, fileVerKey);
         }
@@ -98,8 +117,8 @@ public class FlagManager {
     }
 
     public void createQ() {
-        var curveOperation = new EllipticCurve();
-        file.writePublicKey(curveOperation.scalar(d, SignatureConstants.P), outputFileName);
+        var curveOperation = new EllipticCurve(parameters);
+        file.writePublicKey(curveOperation.scalar(d, parameters.P), outputFileName);
     }
 
 

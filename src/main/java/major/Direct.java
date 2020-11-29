@@ -6,6 +6,7 @@ package major;
 
 import signature.Point;
 import signature.Sign;
+import signature.SignatureParameters;
 import signature.Verify;
 import stribog.Hash;
 
@@ -17,11 +18,13 @@ public class Direct {
     private final Point Q;
     private final BigInteger d;
     private final BigInteger hash;
+    private final SignatureParameters parameters;
 
     FileManager file = new FileManager();
     MessageManager msg = new MessageManager();
 
     public Direct(FlagManager flag) {
+        this.parameters = flag.parameters;
         var fileMessage = flag.fileMessage;
         this.fileOut = flag.outputFileName;
         this.fileSig = flag.fileSig;
@@ -31,7 +34,10 @@ public class Direct {
         var message = file.messageReader(fileMessage);
         if (message.length == 0) msg.errorsIO(2, fileMessage);
 
-        var stribog = new Hash(512);
+        var digit = 256;
+        if (parameters.digit) digit = 512;
+
+        var stribog = new Hash(digit);
         this.hash = stribog.getHash(message);
         if (Q.getX() == null) signing();
         else verification();
@@ -41,7 +47,7 @@ public class Direct {
     private void signing() {
         var sign = new Sign();
 
-        var signature = sign.signing(hash, d);
+        var signature = sign.signing(hash, d, parameters);
         file.writeSignature(signature, fileOut);
     }
 
@@ -51,7 +57,7 @@ public class Direct {
 
         if (sign.equals("")) msg.errorsIO(3, fileSig);
 
-        var check = ver.check(sign, Q, hash);
+        var check = ver.check(sign, Q, hash, parameters);
         if (check)
             msg.status(2);
         else

@@ -21,7 +21,7 @@ public class FileManager {
         return !Files.notExists(fInput.toAbsolutePath()) && Files.isRegularFile(fInput.toAbsolutePath());
     }
 
-    ArrayList<BigInteger> keyReader(String path) {
+    ArrayList<BigInteger> stringReader(String path) {
         var result = new ArrayList<BigInteger>();
         try {
             var fr = new FileReader(path);
@@ -29,7 +29,9 @@ public class FileManager {
             var line = reader.readLine();
 
             while (line != null) {
-                result.add(new BigInteger(line.strip()));
+                try {
+                    result.add(new BigInteger(line.strip()));
+                }catch (Exception ignored){}
                 line = reader.readLine();
             }
 

@@ -13,15 +13,17 @@ import java.util.Random;
  * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=B45A6C4D-DAD9-46F1-829E-9A8C682166D4
  */
 public class Sign {
+    private SignatureParameters parameters;
     private BigInteger k;
     private BigInteger e;
     private BigInteger d;
     private BigInteger r;
     private BigInteger s;
 
-    public String signing (BigInteger hash, BigInteger d){
+    public String signing (BigInteger hash, BigInteger d, SignatureParameters parameters){
+        this.parameters = parameters;
         this.d = d;
-        e = hash.mod(SignatureConstants.q);
+        e = hash.mod(parameters.q);
         if (e.equals(BigInteger.ZERO))
             e = BigInteger.ONE;
         randK();
@@ -31,32 +33,32 @@ public class Sign {
 
     // Генерация псевдослучайного числа k
     // см. (16) Стандарта
-    private void randK(){
+    private void randK() {
         var rand = new Random();
-        k = new BigInteger(SignatureConstants.q.bitLength(), rand);
-        while (k.compareTo(SignatureConstants.q) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
-            k = new BigInteger(SignatureConstants.q.bitLength(), rand);
+        k = new BigInteger(parameters.q.bitLength(), rand);
+        while (k.compareTo(parameters.q) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
+            k = new BigInteger(parameters.q.bitLength(), rand);
         genC();
     }
 
     // Вычисление точки эллиптической кривой
     // см. Шаг 4
     private void genC (){
-        var curveOperation = new EllipticCurve();
-        var pnt = curveOperation.scalar(k, SignatureConstants.P);
+        var curveOperation = new EllipticCurve(parameters);
+        var pnt = curveOperation.scalar(k, parameters.P);
         setR(pnt);
     }
 
     // см. (17)
     private void setR (Point C) {
-        r = C.getX().mod(SignatureConstants.q);
+        r = C.getX().mod(parameters.q);
         if (r.equals(BigInteger.ZERO))
             randK();
     }
 
     // см. (18)
     private void calcS() {
-        s = ((r.multiply(d)).add(k.multiply(e))).mod(SignatureConstants.q);
+        s = ((r.multiply(d)).add(k.multiply(e))).mod(parameters.q);
         if (s.equals(BigInteger.ZERO))
             randK();
     }
@@ -64,7 +66,7 @@ public class Sign {
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
     private String completion (BigInteger num) {
         var str = new StringBuilder(num.toString(16));
-        while (str.length() != SignatureConstants.p.bitLength() / 4) //1 цифра кодируется 4 битами
+        while (str.length() != parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
         return str.toString();
     }
