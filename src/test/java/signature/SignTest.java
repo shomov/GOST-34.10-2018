@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SignTest {
 
-    int testIterations = 1000;
+    private final int testIterations = 1000;
 
 
     @Test
