@@ -31,7 +31,7 @@ public class FileManager {
             while (line != null) {
                 try {
                     result.add(new BigInteger(line.strip()));
-                }catch (Exception ignored){}
+                } catch (Exception ignored){}
                 line = reader.readLine();
             }
 

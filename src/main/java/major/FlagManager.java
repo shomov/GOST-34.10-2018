@@ -80,7 +80,12 @@ public class FlagManager {
             if (file.fileCheck(filePrivateKey)) setPrivateKey();
         }
         else if (!fileVerKey.equals("") && !fileSig.equals("")) {
-            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
+            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) {
+                System.out.println("q");
+                setQ();
+            }
+            else if (!file.fileCheck(fileVerKey)) msg.errorsIO(0, fileVerKey);
+            else if (!file.fileCheck(fileSig)) msg.errorsIO(0, fileSig);
         }
         else msg.basicErrors(0);
 
@@ -118,6 +123,8 @@ public class FlagManager {
 
     public void createQ() {
         var curveOperation = new EllipticCurve(parameters);
+        var q = curveOperation.scalar(d, parameters.P);
+        var qy = q.getY().toString(16);
         file.writePublicKey(curveOperation.scalar(d, parameters.P), outputFileName);
     }
 

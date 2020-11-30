@@ -4,10 +4,14 @@
 
 package signature;
 
+import major.MessageManager;
+
 import java.math.BigInteger;
 
 public class EllipticCurve {
     SignatureParameters parameters;
+
+    private final MessageManager msg = new MessageManager();
 
     public EllipticCurve (SignatureParameters parameters) {
         this.parameters = parameters;
@@ -21,7 +25,6 @@ public class EllipticCurve {
      * https://habr.com/ru/post/335906/
      */
     public Point scalar (BigInteger k, Point point) {
-        System.out.println("scalar - start");
         var result = Point.POINT_INFINITY;
         var bits = new int[k.bitLength()];
 
@@ -41,7 +44,6 @@ public class EllipticCurve {
                 result = sum(result, point);
             i--;
         }
-        System.out.println("scalar - end");
         return result;
     }
 
@@ -50,7 +52,6 @@ public class EllipticCurve {
      * https://stackoverflow.com/questions/15727147/scalar-multiplication-of-point-over-elliptic-curve
      */
     public Point sum (Point a, Point b) {
-        System.out.println("sum - start");
         if (b.equals(Point.POINT_INFINITY))
             return a;
         else if (a.equals(Point.POINT_INFINITY))
@@ -61,16 +62,15 @@ public class EllipticCurve {
             if (b.equals(a)) {
                 var lambda = (((a.getX().pow(2)).multiply(BigInteger.valueOf(3))).add(parameters.a)).multiply((a.getY().multiply(BigInteger.TWO)).modInverse(parameters.p));
                 x = ((lambda.pow(2).subtract(a.getX().multiply(BigInteger.TWO))).mod(parameters.p));
-                y = ((lambda.multiply(a.getX().subtract(x))).mod(parameters.p).subtract(a.getY()));
+                y = (a.getY().negate()).add(lambda.multiply(a.getX().subtract(x))).mod(parameters.p);
             } else {
                 var lambda = (b.getY().subtract(a.getY())).multiply(b.getX().subtract(a.getX()).modInverse(parameters.p));
                 x = (lambda.modPow(BigInteger.TWO, parameters.p).subtract(b.getX()).subtract(a.getX()).mod(parameters.p));
-                y = (((lambda.multiply(a.getX().subtract(x))).mod(parameters.p)).subtract((a.getY().mod(parameters.p))));
+                y = a.getY().negate().mod(parameters.p).add(lambda.multiply(a.getX().subtract(x))).mod(parameters.p);
             }
         } catch (Exception e) {
-            System.err.println("что-то пошло не так");
+            msg.basicErrors(3);
         }
-        System.out.println("sum - end");
         return new Point(x, y);
     }
 

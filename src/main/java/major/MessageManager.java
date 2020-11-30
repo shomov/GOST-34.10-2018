@@ -54,6 +54,10 @@ public class MessageManager {
                 System.err.println("Подпись нечитаема");
                 log.info("The signature is unreadable");
                 break;
+            case (3):
+                System.err.println("Входные параметры неверны!");
+                log.info("Input parameters are incorrect");
+                break;
             default:
                 System.err.println("Применение несанкционированного кода ошибки!");
                 log.error("Unauthorized error code");

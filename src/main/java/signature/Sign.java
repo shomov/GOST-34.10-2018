@@ -4,6 +4,8 @@
 
 package signature;
 
+import major.MessageManager;
+
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -19,6 +21,8 @@ public class Sign {
     private BigInteger d;
     private BigInteger r;
     private BigInteger s;
+
+    MessageManager msg = new MessageManager();
 
     public String signing (BigInteger hash, BigInteger d, SignatureParameters parameters){
         this.parameters = parameters;
@@ -66,7 +70,9 @@ public class Sign {
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
     private String completion (BigInteger num) {
         var str = new StringBuilder(num.toString(16));
-        while (str.length() != parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
+        if (str.length() > parameters.p.bitLength())
+            msg.basicErrors(3);
+        while (str.length() < parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
         return str.toString();
     }
