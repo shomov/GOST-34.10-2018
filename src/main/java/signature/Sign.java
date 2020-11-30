@@ -22,16 +22,26 @@ public class Sign {
     private BigInteger r;
     private BigInteger s;
 
-    MessageManager msg = new MessageManager();
+    private EllipticCurve curveOperation;
+    private final MessageManager msg = new MessageManager();
 
     public String signing (BigInteger hash, BigInteger d, SignatureParameters parameters){
         this.parameters = parameters;
+        curveOperation = new EllipticCurve(parameters);
         this.d = d;
         e = hash.mod(parameters.q);
         if (e.equals(BigInteger.ZERO))
             e = BigInteger.ONE;
         randK();
         calcS();
+
+        //проверка
+        var curveOperation = new EllipticCurve(parameters);
+        var Q = curveOperation.scalar(d, parameters.P);
+        var ver = new Verify();
+        if (!ver.check(concatenation(), Q, hash, parameters))
+            signing(hash, d, parameters);
+
         return concatenation();
     }
 
@@ -48,7 +58,6 @@ public class Sign {
     // Вычисление точки эллиптической кривой
     // см. Шаг 4
     private void genC (){
-        var curveOperation = new EllipticCurve(parameters);
         var pnt = curveOperation.scalar(k, parameters.P);
         setR(pnt);
     }

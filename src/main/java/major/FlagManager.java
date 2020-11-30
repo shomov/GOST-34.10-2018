@@ -18,8 +18,8 @@ public class FlagManager {
     BigInteger d;
     Point Q = Point.POINT_INFINITY;
 
-    FileManager file = new FileManager();
-    MessageManager msg = new MessageManager();
+    private final FileManager file = new FileManager();
+    private final MessageManager msg = new MessageManager();
     SignatureParameters parameters = new SignatureParameters();
 
     @Option(name = "-h")
@@ -80,10 +80,7 @@ public class FlagManager {
             if (file.fileCheck(filePrivateKey)) setPrivateKey();
         }
         else if (!fileVerKey.equals("") && !fileSig.equals("")) {
-            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) {
-                System.out.println("q");
-                setQ();
-            }
+            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
             else if (!file.fileCheck(fileVerKey)) msg.errorsIO(0, fileVerKey);
             else if (!file.fileCheck(fileSig)) msg.errorsIO(0, fileSig);
         }
@@ -93,17 +90,7 @@ public class FlagManager {
     }
 
     private void setParameters() {
-        var list = file.stringReader(fileParameters);
-        try {
-            var a = false;
-            if (list.get(0).equals(new BigInteger("512"))) a = true;
-            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(2, fileParameters);
-            parameters.setConstants(a,
-                    list.get(1), list.get(2), list.get(3), list.get(4),
-                    list.get(5), list.get(6), list.get(7));
-        } catch (Exception exception) {
-            msg.errorsIO(2, fileParameters);
-        }
+        parameters.setConstants(fileParameters);
     }
 
     private void setPrivateKey() {
@@ -114,17 +101,13 @@ public class FlagManager {
 
     private void setQ() {
         var list = file.stringReader(fileVerKey);
-        if (list.size() != 2){
-            msg.errorsIO(2, fileVerKey);
-        }
+        if (list.size() != 2) msg.errorsIO(2, fileVerKey);
         Q = new Point(list.get(0), list.get(1));
 
     }
 
     public void createQ() {
         var curveOperation = new EllipticCurve(parameters);
-        var q = curveOperation.scalar(d, parameters.P);
-        var qy = q.getY().toString(16);
         file.writePublicKey(curveOperation.scalar(d, parameters.P), outputFileName);
     }
 

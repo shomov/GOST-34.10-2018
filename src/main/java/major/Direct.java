@@ -20,8 +20,8 @@ public class Direct {
     private final BigInteger hash;
     private final SignatureParameters parameters;
 
-    FileManager file = new FileManager();
-    MessageManager msg = new MessageManager();
+    private final FileManager file = new FileManager();
+    private final MessageManager msg = new MessageManager();
 
     public Direct(FlagManager flag) {
         this.parameters = flag.parameters;

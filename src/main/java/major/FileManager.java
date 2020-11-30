@@ -21,7 +21,7 @@ public class FileManager {
         return !Files.notExists(fInput.toAbsolutePath()) && Files.isRegularFile(fInput.toAbsolutePath());
     }
 
-    ArrayList<BigInteger> stringReader(String path) {
+    public ArrayList<BigInteger> stringReader(String path) {
         var result = new ArrayList<BigInteger>();
         try {
             var fr = new FileReader(path);

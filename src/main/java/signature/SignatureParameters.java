@@ -4,6 +4,9 @@
 
 package signature;
 
+import major.FileManager;
+import major.MessageManager;
+
 import java.math.BigInteger;
 
 
@@ -28,6 +31,10 @@ public class SignatureParameters {
     public BigInteger yp;
     public Point P;
 
+    private final FileManager file = new FileManager();
+    private final MessageManager msg = new MessageManager();
+
+
     public SignatureParameters(){
         digit = false;
         p = BigInteger.ZERO;
@@ -37,6 +44,20 @@ public class SignatureParameters {
         q = BigInteger.ZERO;
         xp = BigInteger.ZERO;
         yp = BigInteger.ZERO;
+    }
+
+    public void setConstants (String fileParameters) {
+        var list = file.stringReader(fileParameters);
+        try {
+            var a = false;
+            if (list.get(0).equals(new BigInteger("512"))) a = true;
+            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(2, fileParameters);
+            setConstants(a,
+                    list.get(1), list.get(2), list.get(3), list.get(4),
+                    list.get(5), list.get(6), list.get(7));
+        } catch (Exception exception) {
+            msg.errorsIO(2, fileParameters);
+        }
     }
 
     public void setConstants (boolean digit, BigInteger p, BigInteger a,
