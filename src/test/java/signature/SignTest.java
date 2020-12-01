@@ -4,15 +4,18 @@
 
 package signature;
 
+import com.pholser.junit.quickcheck.Property;
+import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 import major.FileManager;
-import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import stribog.Hash;
 
 import java.math.BigInteger;
 import java.util.Random;
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.Assume.assumeThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,61 +25,51 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Важным моментом нижеприведённых тестов является то, что все входные значения (сообщение и ключ подписи) генерируются автоматически.
  */
 @RunWith(JUnitQuickcheck.class)
-class SignTest {
+public class SignTest {
 
-    private final int testIterations = 1000;
+    private final int testIterations = 5;
 
     SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
 
-    @Test
-    void success() {
+    @Property(trials = testIterations)
+    public void success(@InRange(minInt = 0, maxInt = 255) int[] message) {
+        assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
-
         var test = true;
-
-        for (var i = 0; i < testIterations; i++){
-            var ar512 = stribog512_1.getHash(randomMessage());
-            // подписание
-            var sign = new Sign();
-            var d = randomKey();
-            var key = sign.signing(ar512, d, parameters);
-            var Q = curveOperation.scalar(d, parameters.P);
-
-            // верификация
-            var ver = check.check(key, Q, ar512, parameters);
-            if (!ver){
-                test = false;
-                break;
-            }
-        }
+        var ar512 = stribog512_1.getHash(message);
+        // подписание
+        var sign = new Sign();
+        var d = randomKey();
+        var key = sign.signing(ar512, d, parameters);
+        var Q = curveOperation.scalar(d, parameters.P);
+        // верификация
+        var ver = check.check(key, Q, ar512, parameters);
+        if (!ver)
+            test = false;
         assertTrue(test);
     }
 
-    @Test
-    void wrongMessage() {
+    @Property(trials = testIterations)
+    public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message) {
+        assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
-        var message = randomMessage();
         var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
         var d = randomKey();
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P);
-
         var test = false;
-
         for (var i = 0; i < testIterations; i++) {
             var rand = new Random();
             message[rand.nextInt(message.length)] = rand.nextInt(256);
-
             var ar512W = stribog512_1.getHash(message);
-
             var ver = check.check(key, Q, ar512W, parameters);
             if (ver){
                 test = true;
@@ -86,13 +79,14 @@ class SignTest {
         assertFalse(test);
     }
 
-    @Test
-    void wrongSign() {
+    @Property(trials = testIterations)
+    public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message) {
+        assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
-        var ar512 = stribog512_1.getHash(randomMessage());
+        var ar512 = stribog512_1.getHash(message);
         var d = randomKey();
         var Q = curveOperation.scalar(d, parameters.P);
         var sign = new Sign();
@@ -100,7 +94,6 @@ class SignTest {
 
         for (var i = 0; i < testIterations; i++) {
             var key = new StringBuilder(sign.signing(ar512, d, parameters));
-
             var rand = new Random();
             int r;
             String ch;
@@ -109,10 +102,7 @@ class SignTest {
                 ch = new BigInteger(String.valueOf(rand.nextInt(16))).toString(16);
             }
             while (key.charAt(r) == ch.charAt(0));
-
             key.setCharAt(r, ch.charAt(0));
-
-
             var ver = check.check(key.toString(), Q, ar512, parameters);
             if (ver){
                 test = true;
@@ -122,28 +112,25 @@ class SignTest {
         assertFalse(test);
     }
 
-    @Test
-    void wrongVerificationKeySign() {
+    @Property(trials = testIterations)
+    public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message) {
+        assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
         var d = randomKey();
-        var ar512 = stribog512_1.getHash(randomMessage());
+        var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P);
-
         var test = false;
-
         for (var i = 0; i < testIterations; i++) {
-
             var rand = new Random();
             var rx = rand.nextInt();
             var ry = rand.nextInt();
             var x = (Q.getX().add(BigInteger.valueOf(rx)));
             var y = (Q.getY().add(BigInteger.valueOf(ry)));
-
             var ver = check.check(key, new Point(x, y), ar512, parameters);
             if (ver){
                 test = true;
@@ -153,21 +140,7 @@ class SignTest {
         assertFalse(test);
     }
 
-    private int[] randomMessage() {
-        var rand = new Random();
-        var size = Math.abs(rand.nextInt(1000));
-        var message = new int[size];
-        for (var i = 0; i < size; i++)
-            message[i] = Math.abs(rand.nextInt(256));
-        return message;
-    }
-
     private BigInteger randomKey() {
-
-
-
-
-
         return new BigInteger(parameters.q.bitLength(), new Random());
     }
 
