@@ -4,8 +4,10 @@
 
 package signature;
 
+import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 import major.FileManager;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import stribog.Hash;
 
 import java.math.BigInteger;
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Тестирование корректности создания и проверки ЭЦП
  * Важным моментом нижеприведённых тестов является то, что все входные значения (сообщение и ключ подписи) генерируются автоматически.
  */
+@RunWith(JUnitQuickcheck.class)
 class SignTest {
 
     private final int testIterations = 1000;
@@ -160,6 +163,11 @@ class SignTest {
     }
 
     private BigInteger randomKey() {
+
+
+
+
+
         return new BigInteger(parameters.q.bitLength(), new Random());
     }
 

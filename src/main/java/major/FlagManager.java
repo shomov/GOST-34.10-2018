@@ -46,7 +46,7 @@ public class FlagManager {
     @Option(name = "-o")
     String outputFileName;
 
-    public SignatureParameters parsing(String[] args) {
+    public void parsing(String[] args) {
         final var parser = new CmdLineParser(this);
         msg.status(String.join(" ", args));
         try {
@@ -86,11 +86,10 @@ public class FlagManager {
         }
         else msg.basicErrors(0);
 
-        return parameters;
     }
 
     private void setParameters() {
-        file.setConstants(fileParameters);
+        parameters = file.setConstants(fileParameters);
     }
 
     private void setPrivateKey() {

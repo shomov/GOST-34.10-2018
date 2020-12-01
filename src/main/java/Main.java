@@ -11,6 +11,5 @@ public class Main {
         var flag = new FlagManager();
         flag.parsing(args);
         new Direct(flag);
-        flag.parsing(args);
     }
 }
