@@ -11,17 +11,11 @@ public class Point {
     final private BigInteger x;
     final private BigInteger y;
 
-    public static Point POINT_INFINITY = new Point();
+    public static Point POINT_INFINITY = new Point(null , null);
 
     public Point(BigInteger x, BigInteger y) {
         this.x = x;
         this.y = y;
-    }
-
-
-    public Point() {
-        this.x = null;
-        this.y = null;
     }
 
     public BigInteger getX() {
@@ -38,5 +32,12 @@ public class Point {
         if (x != null && y != null && pnt.getX() != null && pnt.getY() != null)
             return ((x.equals(pnt.getX())) && (y.equals(pnt.getY())));
         return false;
+    }
+
+    public String toString() {
+        return "Point{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

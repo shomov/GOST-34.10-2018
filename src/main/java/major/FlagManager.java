@@ -20,7 +20,7 @@ public class FlagManager {
 
     private final FileManager file = new FileManager();
     private final MessageManager msg = new MessageManager();
-    SignatureParameters parameters = new SignatureParameters();
+    SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
 
     @Option(name = "-h")
     boolean help;
@@ -90,7 +90,7 @@ public class FlagManager {
     }
 
     private void setParameters() {
-        parameters.setConstants(fileParameters);
+        file.setConstants(fileParameters);
     }
 
     private void setPrivateKey() {

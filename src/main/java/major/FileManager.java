@@ -5,6 +5,7 @@
 package major;
 
 import signature.Point;
+import signature.SignatureParameters;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -39,6 +40,22 @@ public class FileManager {
             msg.errorsIO(3, path);
         }
         return result;
+    }
+
+    public SignatureParameters setConstants (String fileParameters) {
+        var list = stringReader(fileParameters);
+        var parameters = SignatureParameters.PARAMETERS_INFINITY;
+        try {
+            var a = false;
+            if (list.get(0).equals(new BigInteger("512"))) a = true;
+            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(2, fileParameters);
+            parameters = new SignatureParameters(a,
+                    list.get(1), list.get(2), list.get(3), list.get(4),
+                    list.get(5), list.get(6), list.get(7));
+        } catch (Exception exception) {
+            msg.errorsIO(2, fileParameters);
+        }
+        return parameters;
     }
 
     int[] messageReader(String path) {

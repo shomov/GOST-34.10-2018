@@ -4,9 +4,6 @@
 
 package signature;
 
-import major.FileManager;
-import major.MessageManager;
-
 import java.math.BigInteger;
 
 
@@ -31,36 +28,20 @@ public class SignatureParameters {
     public BigInteger yp;
     public Point P;
 
-    private final FileManager file = new FileManager();
-    private final MessageManager msg = new MessageManager();
+    public static SignatureParameters PARAMETERS_INFINITY = new SignatureParameters(
+            false,
+            BigInteger.ZERO,
+            BigInteger.ZERO,
+            BigInteger.ZERO,
+            BigInteger.ZERO,
+            BigInteger.ZERO,
+            BigInteger.ZERO,
+            BigInteger.ZERO
+    );
 
 
-    public SignatureParameters(){
-        digit = false;
-        p = BigInteger.ZERO;
-        a = BigInteger.ZERO;
-        b = BigInteger.ZERO;
-        m = BigInteger.ZERO;
-        q = BigInteger.ZERO;
-        xp = BigInteger.ZERO;
-        yp = BigInteger.ZERO;
-    }
 
-    public void setConstants (String fileParameters) {
-        var list = file.stringReader(fileParameters);
-        try {
-            var a = false;
-            if (list.get(0).equals(new BigInteger("512"))) a = true;
-            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(2, fileParameters);
-            setConstants(a,
-                    list.get(1), list.get(2), list.get(3), list.get(4),
-                    list.get(5), list.get(6), list.get(7));
-        } catch (Exception exception) {
-            msg.errorsIO(2, fileParameters);
-        }
-    }
-
-    public void setConstants (boolean digit, BigInteger p, BigInteger a,
+    public SignatureParameters (boolean digit, BigInteger p, BigInteger a,
                          BigInteger b, BigInteger m, BigInteger q,
                          BigInteger xp, BigInteger yp) {
         this.digit = digit;
@@ -74,6 +55,18 @@ public class SignatureParameters {
         this.P = new Point(xp, yp);
     }
 
-
-
+    @Override
+    public String toString() {
+        return "SignatureParameters{" +
+                "digit=" + digit +
+                ", p=" + p +
+                ", a=" + a +
+                ", b=" + b +
+                ", m=" + m +
+                ", q=" + q +
+                ", xp=" + xp +
+                ", yp=" + yp +
+                ", " + P.toString() +
+                '}';
+    }
 }

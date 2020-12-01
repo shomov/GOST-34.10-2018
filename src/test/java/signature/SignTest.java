@@ -4,13 +4,15 @@
 
 package signature;
 
+import major.FileManager;
 import org.junit.jupiter.api.Test;
 import stribog.Hash;
 
 import java.math.BigInteger;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -21,11 +23,12 @@ class SignTest {
 
     private final int testIterations = 1000;
 
-    SignatureParameters parameters = new SignatureParameters();
-    
+    SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
+    private final FileManager file = new FileManager();
+
     @Test
     void success() {
-        parameters.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -46,15 +49,13 @@ class SignTest {
                 test = false;
                 break;
             }
-
         }
         assertTrue(test);
-
     }
 
     @Test
     void wrongMessage() {
-        parameters.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -79,14 +80,12 @@ class SignTest {
                 break;
             }
         }
-
         assertFalse(test);
-
     }
 
     @Test
     void wrongSign() {
-        parameters.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -117,14 +116,12 @@ class SignTest {
                 break;
             }
         }
-
         assertFalse(test);
-
     }
 
     @Test
     void wrongVerificationKeySign() {
-        parameters.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -150,9 +147,7 @@ class SignTest {
                 break;
             }
         }
-
         assertFalse(test);
-
     }
 
     private int[] randomMessage() {
@@ -165,8 +160,7 @@ class SignTest {
     }
 
     private BigInteger randomKey() {
-        var rand = new Random();
-        return new BigInteger(parameters.q.bitLength(), rand);
+        return new BigInteger(parameters.q.bitLength(), new Random());
     }
 
 
