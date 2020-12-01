@@ -29,11 +29,8 @@ public class Sign {
         this.parameters = parameters;
         curveOperation = new EllipticCurve(parameters);
         this.d = d;
-        e = hash.mod(parameters.q);
-        if (e.equals(BigInteger.ZERO))
-            e = BigInteger.ONE;
+        calcE(hash);
         randK();
-        calcS();
 
         //проверка
         var curveOperation = new EllipticCurve(parameters);
@@ -43,6 +40,12 @@ public class Sign {
             signing(hash, d, parameters);
 
         return concatenation();
+    }
+
+    private void calcE(BigInteger hash) {
+        e = hash.mod(parameters.q);
+        if (e.equals(BigInteger.ZERO))
+            e = BigInteger.ONE;
     }
 
     // Генерация псевдослучайного числа k
@@ -57,16 +60,17 @@ public class Sign {
 
     // Вычисление точки эллиптической кривой
     // см. Шаг 4
-    private void genC (){
+    private void genC(){
         var pnt = curveOperation.scalar(k, parameters.P);
-        setR(pnt);
+        calcR(pnt);
     }
 
     // см. (17)
-    private void setR (Point C) {
+    private void calcR(Point C) {
         r = C.getX().mod(parameters.q);
         if (r.equals(BigInteger.ZERO))
             randK();
+        calcS();
     }
 
     // см. (18)
@@ -79,10 +83,10 @@ public class Sign {
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
     private String completion (BigInteger num) {
         var str = new StringBuilder(num.toString(16));
-        if (str.length() > parameters.p.bitLength())
-            msg.basicErrors(3);
         while (str.length() < parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
+        if (str.length() != parameters.p.bitLength() / 4)
+            randK();
         return str.toString();
     }
 

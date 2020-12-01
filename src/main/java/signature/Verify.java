@@ -30,7 +30,7 @@ public class Verify {
         this.hash = hash;
 
         extraction();
-        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(parameters.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(parameters.q) >= 0 )
+        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(parameters.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(parameters.q) >= 0)
             return false;
         calcE();
         var R = calcC().getX().mod(parameters.q);
@@ -57,8 +57,7 @@ public class Verify {
      * см. Шаг 2-3
      */
     private void calcE() {
-        var alpha = hash;
-        e = alpha.mod(parameters.q);
+        e = hash.mod(parameters.q);
         if (e.compareTo(BigInteger.ZERO) == 0)
             e = BigInteger.ONE;
     }
