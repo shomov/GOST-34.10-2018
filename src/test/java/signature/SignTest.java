@@ -33,7 +33,7 @@ public class SignTest {
     private final FileManager file = new FileManager();
 
     @Property(trials = testIterations)
-    public void success(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
+    public void success(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
@@ -43,7 +43,6 @@ public class SignTest {
         var ar512 = stribog512_1.getHash(message);
         // подписание
         var sign = new Sign();
-        var d = randomKey();
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P);
         // верификация
@@ -54,7 +53,7 @@ public class SignTest {
     }
 
     @Property(trials = testIterations)
-    public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
+    public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
@@ -62,7 +61,6 @@ public class SignTest {
         var check = new Verify();
         var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
-        var d = randomKey();
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P);
         var test = false;
@@ -76,14 +74,13 @@ public class SignTest {
     }
 
     @Property(trials = testIterations)
-    public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
+    public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
         var ar512 = stribog512_1.getHash(message);
-        var d = randomKey();
         var Q = curveOperation.scalar(d, parameters.P);
         var sign = new Sign();
         var key = new StringBuilder(sign.signing(ar512, d, parameters));
@@ -103,13 +100,12 @@ public class SignTest {
     }
 
     @Property(trials = testIterations)
-    public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
+    public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
-        var d = randomKey();
         var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
@@ -126,9 +122,6 @@ public class SignTest {
         assertFalse(test);
     }
 
-    private BigInteger randomKey() {
-        return new BigInteger(parameters.q.bitLength(), new Random());
-    }
 
 
 
