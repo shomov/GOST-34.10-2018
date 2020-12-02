@@ -29,11 +29,11 @@ public class MessageManager {
                 log.info("The signature was verified");
                 break;
             case (3):
-                System.err.println("Подпись не верна!");
+                System.out.println("Подпись не верна!");
                 log.info("The signature is not correct");
                 break;
             default:
-                System.err.println("Применение несанкционированного кода сообщения!");
+                System.out.println("Применение несанкционированного кода сообщения!");
                 log.error("Unauthorized message code");
                 break;
         }
@@ -43,23 +43,23 @@ public class MessageManager {
     public void basicErrors(int code) {
         switch (code) {
             case (0):
-                System.err.println("Неверно заданы аргументы\n -h  —  помощь");
+                System.out.println("Неверно заданы аргументы\n -h  —  помощь");
                 log.info("Invalid arguments");
                 break;
             case (1):
-                System.err.println("Отсутствует файл назначения\n -h  —  помощь");
+                System.out.println("Отсутствует файл назначения\n -h  —  помощь");
                 log.info("Missing destination file");
                 break;
             case (2):
-                System.err.println("Подпись нечитаема");
+                System.out.println("Подпись нечитаема");
                 log.info("The signature is unreadable");
                 break;
             case (3):
-                System.err.println("Входные параметры неверны!");
+                System.out.println("Входные параметры неверны!");
                 log.info("Input parameters are incorrect");
                 break;
             default:
-                System.err.println("Применение несанкционированного кода ошибки!");
+                System.out.println("Применение несанкционированного кода ошибки!");
                 log.error("Unauthorized error code");
                 break;
         }
@@ -77,7 +77,7 @@ public class MessageManager {
                 log.info("The EDS was successfully recorded in " + path);
                 break;
             default:
-                System.err.println("Применение несанкционированного кода сообщения!");
+                System.out.println("Применение несанкционированного кода сообщения!");
                 log.error("Unauthorized message code");
                 System.exit(1);
                 break;
@@ -108,7 +108,7 @@ public class MessageManager {
                 log.info("Write error " + path);
                 break;
             default:
-                System.err.println("Применение несанкционированного кода сообщения!");
+                System.out.println("Применение несанкционированного кода сообщения!");
                 log.error("Unauthorized message code");
                 break;
         }

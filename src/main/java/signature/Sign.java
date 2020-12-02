@@ -36,10 +36,11 @@ public class Sign {
         var curveOperation = new EllipticCurve(parameters);
         var Q = curveOperation.scalar(d, parameters.P);
         var ver = new Verify();
-        if (!ver.check(concatenation(), Q, hash, parameters))
+        var signature = concatenation();
+        if (!ver.check(signature, Q, hash, parameters))
             signing(hash, d, parameters);
 
-        return concatenation();
+        return signature;
     }
 
     private void calcE(BigInteger hash) {
@@ -68,7 +69,7 @@ public class Sign {
     // см. (17)
     private void calcR(Point C) {
         r = C.getX().mod(parameters.q);
-        if (r.equals(BigInteger.ZERO))
+        if (r.equals(BigInteger.ZERO) || r.toString(16).length() > parameters.p.bitLength() / 4)
             randK();
         calcS();
     }
@@ -76,7 +77,7 @@ public class Sign {
     // см. (18)
     private void calcS() {
         s = ((r.multiply(d)).add(k.multiply(e))).mod(parameters.q);
-        if (s.equals(BigInteger.ZERO))
+        if (s.equals(BigInteger.ZERO) || s.toString(16).length() > parameters.p.bitLength() / 4)
             randK();
     }
 
@@ -85,7 +86,7 @@ public class Sign {
         var str = new StringBuilder(num.toString(16));
         while (str.length() < parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
-        if (str.length() != parameters.p.bitLength() / 4)
+        if (str.length() > parameters.p.bitLength() / 4)
             randK();
         return str.toString();
     }
