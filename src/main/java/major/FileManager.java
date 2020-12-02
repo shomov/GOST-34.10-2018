@@ -91,7 +91,7 @@ public class FileManager {
             msg.statusIO(1, fileOut);
         }
         catch(IOException ex){
-            System.out.println(ex.getMessage());
+            msg.errorsIO(4, fileOut);
         }
     }
 
@@ -102,7 +102,6 @@ public class FileManager {
             writer.write(Q.getX().toString() + newLine);
             writer.write(Q.getY().toString());
             writer.flush();
-            msg.statusIO(0, file);
         } catch (IOException e) {
             msg.errorsIO(4, file);
         }

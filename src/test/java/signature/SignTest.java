@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 5;
+    private final int testIterations = 1000;
 
     SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
@@ -66,16 +66,12 @@ public class SignTest {
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P);
         var test = false;
-        for (var i = 0; i < testIterations; i++) {
-            var rand = new Random();
-            message[rand.nextInt(message.length)] = rand.nextInt(256);
-            var ar512W = stribog512_1.getHash(message);
-            var ver = check.check(key, Q, ar512W, parameters);
-            if (ver){
-                test = true;
-                break;
-            }
-        }
+        var rand = new Random();
+        message[rand.nextInt(message.length)] = rand.nextInt(256);
+        var ar512W = stribog512_1.getHash(message);
+        var ver = check.check(key, Q, ar512W, parameters);
+        if (ver)
+            test = true;
         assertFalse(test);
     }
 
@@ -90,25 +86,19 @@ public class SignTest {
         var d = randomKey();
         var Q = curveOperation.scalar(d, parameters.P);
         var sign = new Sign();
+        var key = new StringBuilder(sign.signing(ar512, d, parameters));
+        var rand = new Random();
+        int r;
+        String ch;
+        do {
+            r = rand.nextInt(key.length());
+            ch = new BigInteger(String.valueOf(rand.nextInt(16))).toString(16);
+        } while (key.charAt(r) == ch.charAt(0));
+        key.setCharAt(r, ch.charAt(0));
+        var ver = check.check(key.toString(), Q, ar512, parameters);
         var test = false;
-
-        for (var i = 0; i < testIterations; i++) {
-            var key = new StringBuilder(sign.signing(ar512, d, parameters));
-            var rand = new Random();
-            int r;
-            String ch;
-            do {
-                r = rand.nextInt(key.length());
-                ch = new BigInteger(String.valueOf(rand.nextInt(16))).toString(16);
-            }
-            while (key.charAt(r) == ch.charAt(0));
-            key.setCharAt(r, ch.charAt(0));
-            var ver = check.check(key.toString(), Q, ar512, parameters);
-            if (ver){
-                test = true;
-                break;
-            }
-        }
+        if (ver)
+            test = true;
         assertFalse(test);
     }
 
@@ -125,18 +115,14 @@ public class SignTest {
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P);
         var test = false;
-        for (var i = 0; i < testIterations; i++) {
-            var rand = new Random();
-            var rx = rand.nextInt();
-            var ry = rand.nextInt();
-            var x = (Q.getX().add(BigInteger.valueOf(rx)));
-            var y = (Q.getY().add(BigInteger.valueOf(ry)));
-            var ver = check.check(key, new Point(x, y), ar512, parameters);
-            if (ver){
-                test = true;
-                break;
-            }
-        }
+        var rand = new Random();
+        var rx = rand.nextInt();
+        var ry = rand.nextInt();
+        var x = (Q.getX().add(BigInteger.valueOf(rx)));
+        var y = (Q.getY().add(BigInteger.valueOf(ry)));
+        var ver = check.check(key, new Point(x, y), ar512, parameters);
+        if (ver)
+            test = true;
         assertFalse(test);
     }
 

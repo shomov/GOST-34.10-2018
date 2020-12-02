@@ -7,9 +7,8 @@ package major;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import signature.SignatureParameters;
-import signature.EllipticCurve;
 import signature.Point;
+import signature.SignatureParameters;
 
 import java.math.BigInteger;
 
@@ -58,31 +57,39 @@ public class FlagManager {
         if (help) msg.status(0);
 
         if (!fileParameters.equals(""))  {
-            if (!file.fileCheck(fileParameters)) msg.errorsIO(0, fileParameters);
+            if (!file.fileCheck(fileParameters))
+                msg.errorsIO(0, fileParameters);
             setParameters();
         }
 
         if (!fileD.equals("")) {
             if (outputFileName.equals("")) msg.basicErrors(1);
-            if (file.fileCheck(outputFileName)) msg.errorsIO(1, outputFileName);
-            if (!file.fileCheck(fileD)) msg.errorsIO(0, fileD);
+            if (file.fileCheck(outputFileName))
+                msg.errorsIO(1, outputFileName);
+            if (!file.fileCheck(fileD))
+                msg.errorsIO(0, fileD);
             filePrivateKey = fileD;
             setPrivateKey();
-            createQ();
-            msg.statusIO(0, outputFileName);
+//            createQ();
+//            msg.statusIO(0, outputFileName);
         }
 
-        if (fileMessage.equals("")) msg.basicErrors(0);
-        else if (!file.fileCheck(fileMessage)) msg.errorsIO(0, fileMessage);
+        if (!fileMessage.equals("") && filePrivateKey.equals("") && fileD.equals("") && fileSig.equals(""))
+            msg.basicErrors(0);
+        else if (!fileMessage.equals("") && !file.fileCheck(fileMessage))
+            msg.errorsIO(0, fileMessage);
 
         if (!filePrivateKey.equals("")) {
             if (outputFileName == null) setPathOut();
             if (file.fileCheck(filePrivateKey)) setPrivateKey();
+            else msg.basicErrors(0);
         }
         else if (!fileVerKey.equals("") && !fileSig.equals("")) {
             if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
-            else if (!file.fileCheck(fileVerKey)) msg.errorsIO(0, fileVerKey);
-            else if (!file.fileCheck(fileSig)) msg.errorsIO(0, fileSig);
+            else if (!file.fileCheck(fileVerKey))
+                msg.errorsIO(0, fileVerKey);
+            else if (!file.fileCheck(fileSig))
+                msg.errorsIO(0, fileSig);
         }
         else msg.basicErrors(0);
 
@@ -94,7 +101,8 @@ public class FlagManager {
 
     private void setPrivateKey() {
         var list = file.stringReader(filePrivateKey);
-        if (list.size() != 1) msg.errorsIO(2, filePrivateKey);
+        if (list.size() != 1)
+            msg.errorsIO(2, filePrivateKey);
         d = list.get(0);
     }
 
@@ -106,13 +114,14 @@ public class FlagManager {
     }
 
     public void createQ() {
-        var curveOperation = new EllipticCurve(parameters);
-        file.writePublicKey(curveOperation.scalar(d, parameters.P), outputFileName);
+//        var curveOperation = new EllipticCurve(parameters);
+//        file.writePublicKey(curveOperation.scalar(d, parameters.P), outputFileName);
     }
 
 
     void setPathOut() {
         outputFileName = fileMessage + ".sig";
-        if (file.fileCheck(outputFileName)) msg.errorsIO(1, outputFileName);
+        if (file.fileCheck(outputFileName))
+            msg.errorsIO(1, outputFileName);
     }
 }

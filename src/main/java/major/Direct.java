@@ -4,10 +4,7 @@
 
 package major;
 
-import signature.Point;
-import signature.Sign;
-import signature.SignatureParameters;
-import signature.Verify;
+import signature.*;
 import stribog.Hash;
 
 import java.math.BigInteger;
@@ -17,7 +14,7 @@ public class Direct {
     private final String fileSig;
     private final Point Q;
     private final BigInteger d;
-    private final BigInteger hash;
+    private BigInteger hash;
     private final SignatureParameters parameters;
 
     private final FileManager file = new FileManager();
@@ -31,17 +28,23 @@ public class Direct {
         this.Q = flag.Q;
         this.d = flag.d;
 
-        var message = file.messageReader(fileMessage);
-        if (message.length == 0) msg.errorsIO(2, fileMessage);
+        if (!flag.fileD.equals("")) {
+            var curveOperation = new EllipticCurve(parameters);
+            file.writePublicKey(curveOperation.scalar(d, parameters.P), flag.outputFileName);
+            msg.statusIO(0, flag.outputFileName);
+        }
+        else {
+            var message = file.messageReader(fileMessage);
+            if (message.length == 0) msg.errorsIO(2, fileMessage);
 
-        var digit = 256;
-        if (parameters.digit) digit = 512;
+            var digit = 256;
+            if (parameters.digit) digit = 512;
 
-        var stribog = new Hash(digit);
-        this.hash = stribog.getHash(message);
-        if (Q.getX() == null) signing();
-        else verification();
-
+            var stribog = new Hash(digit);
+            this.hash = stribog.getHash(message);
+            if (Q.getX() == null) signing();
+            else verification();
+        }
     }
 
     private void signing() {

@@ -37,7 +37,7 @@ public class MessageManager {
                 log.error("Unauthorized message code");
                 break;
         }
-        System.exit(0);
+//        System.exit(0);
     }
 
     public void basicErrors(int code) {
@@ -82,7 +82,7 @@ public class MessageManager {
                 System.exit(1);
                 break;
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
     public void errorsIO(int code, String path) {
