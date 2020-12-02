@@ -27,13 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 1000;
+    private final int testIterations = 5;
 
     SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
 
     @Property(trials = testIterations)
-    public void success(@InRange(minInt = 0, maxInt = 255) int[] message) {
+    public void success(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
@@ -54,7 +54,7 @@ public class SignTest {
     }
 
     @Property(trials = testIterations)
-    public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message) {
+    public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
@@ -76,7 +76,7 @@ public class SignTest {
     }
 
     @Property(trials = testIterations)
-    public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message) {
+    public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
@@ -103,7 +103,7 @@ public class SignTest {
     }
 
     @Property(trials = testIterations)
-    public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message) {
+    public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);

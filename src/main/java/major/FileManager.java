@@ -22,7 +22,7 @@ public class FileManager {
         return !Files.notExists(fInput.toAbsolutePath()) && Files.isRegularFile(fInput.toAbsolutePath());
     }
 
-    public ArrayList<BigInteger> stringReader(String path) {
+    public ArrayList<BigInteger> stringReader(String path) throws IOException {
         var result = new ArrayList<BigInteger>();
         try {
             var fr = new FileReader(path);
@@ -42,7 +42,7 @@ public class FileManager {
         return result;
     }
 
-    public SignatureParameters setConstants (String fileParameters) {
+    public SignatureParameters setConstants (String fileParameters) throws IOException {
         var list = stringReader(fileParameters);
         var parameters = SignatureParameters.PARAMETERS_INFINITY;
         try {
@@ -58,7 +58,7 @@ public class FileManager {
         return parameters;
     }
 
-    int[] messageReader(String path) {
+    int[] messageReader(String path) throws IOException {
         try {
             var fis = new FileInputStream(path);
             var data = fis.readAllBytes();
@@ -73,7 +73,7 @@ public class FileManager {
         return new int[0];
     }
 
-    String signReader(String path) {
+    String signReader(String path) throws IOException {
         try {
             var fr = new FileReader(path);
             var reader = new BufferedReader(fr);
@@ -84,7 +84,7 @@ public class FileManager {
         return "";
     }
 
-    void writeSignature(String signature, String fileOut) {
+    void writeSignature(String signature, String fileOut) throws IOException {
         try(var writer = new FileWriter(fileOut, false)) {
             writer.write(signature);
             writer.flush();
@@ -95,7 +95,7 @@ public class FileManager {
         }
     }
 
-    void writePublicKey(Point Q, String file) {
+    void writePublicKey(Point Q, String file) throws IOException {
         try {
             var writer = new FileWriter(file);
             var newLine = System.getProperty("line.separator");

@@ -7,6 +7,8 @@ package major;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 public class MessageManager {
     Logger log = LogManager.getLogger(MessageManager.class.getName());
 
@@ -40,30 +42,31 @@ public class MessageManager {
 //        System.exit(0);
     }
 
-    public void basicErrors(int code) {
+    public void basicErrors(int code) throws Exception {
+        var msg = "";
         switch (code) {
             case (0):
-                System.out.println("Неверно заданы аргументы\n -h  —  помощь");
+                msg = "Неверно заданы аргументы\n -h  —  помощь";
                 log.info("Invalid arguments");
                 break;
             case (1):
-                System.out.println("Отсутствует файл назначения\n -h  —  помощь");
+                msg = "Отсутствует файл назначения\n -h  —  помощь";
                 log.info("Missing destination file");
                 break;
             case (2):
-                System.out.println("Подпись нечитаема");
+                msg = "Подпись нечитаема";
                 log.info("The signature is unreadable");
                 break;
             case (3):
-                System.out.println("Входные параметры неверны!");
+                msg = "Входные параметры неверны!";
                 log.info("Input parameters are incorrect");
                 break;
             default:
-                System.out.println("Применение несанкционированного кода ошибки!");
+                msg = "Применение несанкционированного кода ошибки!";
                 log.error("Unauthorized error code");
                 break;
         }
-        System.exit(1);
+    throw new Exception(msg);
     }
 
     public void statusIO(int code, String path) {
@@ -82,37 +85,37 @@ public class MessageManager {
                 System.exit(1);
                 break;
         }
-        //System.exit(0);
     }
 
-    public void errorsIO(int code, String path) {
+    public void errorsIO(int code, String path) throws IOException {
+        var msg = "";
         switch (code) {
             case (0):
-                System.out.println("Файл отсутствует " + path);
+                msg = "Файл отсутствует " + path;
                 log.info("The file is missing " + path);
                 break;
             case (1):
-                System.out.println("Файл уже присутствует " + path + " воспользуйтесь ручным выбором -o ");
+                msg = "Файл уже присутствует " + path + " воспользуйтесь ручным выбором -o ";
                 log.info("The file is already present" + path);
                 break;
             case (2):
-                System.out.println("Файл повреждён " + path);
+                msg = "Файл повреждён " + path;
                 log.info("The file is corrupted " + path);
                 break;
             case (3):
-                System.out.println("Ошибка чтения " + path);
+                msg = "Ошибка чтения " + path;
                 log.info("Read error " + path);
                 break;
             case (4):
-                System.out.println("Ошибка записи " + path);
+                msg = "Ошибка записи " + path;
                 log.info("Write error " + path);
                 break;
             default:
-                System.out.println("Применение несанкционированного кода сообщения!");
+                msg = "Применение несанкционированного кода сообщения!";
                 log.error("Unauthorized message code");
                 break;
         }
-        System.exit(1);
+        throw new IOException(msg);
     }
 
 //    private String curveSettings() {

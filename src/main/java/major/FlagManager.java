@@ -10,6 +10,7 @@ import org.kohsuke.args4j.Option;
 import signature.Point;
 import signature.SignatureParameters;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
 
@@ -45,7 +46,7 @@ public class FlagManager {
     @Option(name = "-o")
     String outputFileName;
 
-    public void parsing(String[] args) {
+    public void parsing(String[] args) throws Exception {
         final var parser = new CmdLineParser(this);
         msg.status(String.join(" ", args));
         try {
@@ -95,31 +96,25 @@ public class FlagManager {
 
     }
 
-    private void setParameters() {
+    private void setParameters() throws IOException {
         parameters = file.setConstants(fileParameters);
     }
 
-    private void setPrivateKey() {
+    private void setPrivateKey() throws IOException {
         var list = file.stringReader(filePrivateKey);
         if (list.size() != 1)
             msg.errorsIO(2, filePrivateKey);
         d = list.get(0);
     }
 
-    private void setQ() {
+    private void setQ() throws IOException {
         var list = file.stringReader(fileVerKey);
         if (list.size() != 2) msg.errorsIO(2, fileVerKey);
         Q = new Point(list.get(0), list.get(1));
 
     }
 
-    public void createQ() {
-//        var curveOperation = new EllipticCurve(parameters);
-//        file.writePublicKey(curveOperation.scalar(d, parameters.P), outputFileName);
-    }
-
-
-    void setPathOut() {
+    void setPathOut() throws IOException {
         outputFileName = fileMessage + ".sig";
         if (file.fileCheck(outputFileName))
             msg.errorsIO(1, outputFileName);

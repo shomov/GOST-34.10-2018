@@ -20,7 +20,7 @@ public class Direct {
     private final FileManager file = new FileManager();
     private final MessageManager msg = new MessageManager();
 
-    public Direct(FlagManager flag) {
+    public Direct(FlagManager flag) throws Exception {
         this.parameters = flag.parameters;
         var fileMessage = flag.fileMessage;
         this.fileOut = flag.outputFileName;
@@ -47,14 +47,14 @@ public class Direct {
         }
     }
 
-    private void signing() {
+    private void signing() throws Exception {
         var sign = new Sign();
 
         var signature = sign.signing(hash, d, parameters);
         file.writeSignature(signature, fileOut);
     }
 
-    private void verification() {
+    private void verification() throws Exception {
         var ver = new Verify();
         var sign = file.signReader(fileSig);
 

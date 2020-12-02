@@ -25,7 +25,7 @@ public class Sign {
     private EllipticCurve curveOperation;
     private final MessageManager msg = new MessageManager();
 
-    public String signing (BigInteger hash, BigInteger d, SignatureParameters parameters){
+    public String signing (BigInteger hash, BigInteger d, SignatureParameters parameters) throws Exception {
         this.parameters = parameters;
         curveOperation = new EllipticCurve(parameters);
         this.d = d;
@@ -51,7 +51,7 @@ public class Sign {
 
     // Генерация псевдослучайного числа k
     // см. (16) Стандарта
-    private void randK() {
+    private void randK() throws Exception {
         var rand = new Random();
         k = new BigInteger(parameters.q.bitLength(), rand);
         while (k.compareTo(parameters.q) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
@@ -61,13 +61,13 @@ public class Sign {
 
     // Вычисление точки эллиптической кривой
     // см. Шаг 4
-    private void genC(){
+    private void genC() throws Exception {
         var pnt = curveOperation.scalar(k, parameters.P);
         calcR(pnt);
     }
 
     // см. (17)
-    private void calcR(Point C) {
+    private void calcR(Point C) throws Exception {
         r = C.getX().mod(parameters.q);
         if (r.equals(BigInteger.ZERO) || r.toString(16).length() > parameters.p.bitLength() / 4)
             randK();
@@ -75,14 +75,14 @@ public class Sign {
     }
 
     // см. (18)
-    private void calcS() {
+    private void calcS() throws Exception {
         s = ((r.multiply(d)).add(k.multiply(e))).mod(parameters.q);
         if (s.equals(BigInteger.ZERO) || s.toString(16).length() > parameters.p.bitLength() / 4)
             randK();
     }
 
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
-    private String completion (BigInteger num) {
+    private String completion (BigInteger num) throws Exception {
         var str = new StringBuilder(num.toString(16));
         while (str.length() < parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
@@ -93,7 +93,7 @@ public class Sign {
 
     // Конкатенация (объединение) векторов
     // см. Шаг 6
-    private String concatenation() {
+    private String concatenation() throws Exception {
         return completion(r) + completion(s);
     }
 

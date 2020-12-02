@@ -1,4 +1,3 @@
-import com.ginsberg.junit.exit.ExpectSystemExitWithStatus;
 import org.jeasy.random.EasyRandom;
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +25,7 @@ public class MainTest {
     }
 
     @Test
-    public void success256() throws IOException {
+    public void success256() throws Exception {
         msgGen();
         Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
         Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
@@ -38,7 +37,7 @@ public class MainTest {
     }
 
     @Test
-    public void success512() throws IOException {
+    public void success512() throws Exception {
         msgGen();
         Main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-s", "Keys/private512.key"});
         Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key", "-o", "TestDirectory/publicQ512.kq"});
@@ -50,20 +49,20 @@ public class MainTest {
     }
 
     @Test
-    public void unsuccess256() throws IOException {
+    public void unsuccess256() throws Exception {
         msgGen();
         Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
         Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
         msgGen();
         outputStreamCaptor.reset();
         Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"});
-        final var expected = "Подпись успешно прошла проверку";
+        final var expected = "Подпись не верна!";
         assertEquals(expected, outputStreamCaptor.toString().trim());
         deleteFolderAndItsContent();
     }
 
     @Test
-    public void unsuccess512() throws IOException {
+    public void unsuccess512() throws Exception {
         msgGen();
         Main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-s", "Keys/private512.key"});
         Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key", "-o", "TestDirectory/publicQ512.kq"});
@@ -75,36 +74,40 @@ public class MainTest {
         deleteFolderAndItsContent();
     }
 
-    @Test
-    @DisplayName("System.exit(1) is caught and detected")
-    @ExpectSystemExitWithStatus(1)
-    void incorrectFlag() {
-        Main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
-    }
-
-    @Test
-    @DisplayName("System.exit(1) is caught and detected")
-    @ExpectSystemExitWithStatus(1)
-    void parametersIsAbsent() {
-        Main.main(new String[]{"-p", "Parameters/Signature", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
-    }
-
-    @Test
-    @DisplayName("System.exit(1) is caught and detected")
-    @ExpectSystemExitWithStatus(1)
-    void publicKeyIsAbsent() {
-        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"});
-    }
-
-    @Test
-    @DisplayName("System.exit(1) is caught and detected")
-    @ExpectSystemExitWithStatus(1)
-    void privateKeyIsAbsent() {
-        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private.key"});
-    }
-
-
-
+//    @Test
+//    void incorrect() throws IOException {
+//        //Неверный флаг
+//        assertThrows(Exception.class, () -> Main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+//        //Неверные параметры
+//        parametersGen();
+//        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "TestDirectory/Parameter", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+//        //Неверный ключ проверки
+//        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
+//        //Неверный ключ подписи
+//        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private.key"}));
+//
+//
+//
+//    }
+//
+//
+//    @Test
+//    @DisplayName("System.exit(1) is caught and detected")
+//    @ExpectSystemExitWithStatus(1)
+//    void privateKeyIsAbsent() throws Exception {
+//        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private.key"});
+//    }
+//
+//
+//    @After
+//    public void parametersGen() throws IOException {
+//        var generator = new EasyRandom();
+//        var msg = generator.nextObject(String.class);
+//        var writer = new FileWriter("TestDirectory/Parameter", true);
+//        writer.write(msg);
+//        writer.flush();
+//        writer.close();
+//    }
 
     @After
     public void msgGen() throws IOException {

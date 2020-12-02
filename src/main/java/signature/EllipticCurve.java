@@ -24,7 +24,7 @@ public class EllipticCurve {
      * Выполняется чтение бита, если он равен 1 - выполняется сложение, иначе удвоение, затем сдвиг бит
      * https://habr.com/ru/post/335906/
      */
-    public Point scalar (BigInteger k, Point point) {
+    public Point scalar (BigInteger k, Point point) throws Exception {
         var result = Point.POINT_INFINITY;
         var bits = new int[k.bitLength()];
 
@@ -51,7 +51,7 @@ public class EllipticCurve {
      * Функция реализует операцию сложения двух точек эллиптической кривой
      * https://stackoverflow.com/questions/15727147/scalar-multiplication-of-point-over-elliptic-curve
      */
-    public Point sum (Point a, Point b) {
+    public Point sum (Point a, Point b) throws Exception {
         if (b.equals(Point.POINT_INFINITY))
             return a;
         else if (a.equals(Point.POINT_INFINITY))

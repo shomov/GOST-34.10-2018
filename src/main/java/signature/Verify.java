@@ -23,7 +23,7 @@ public class Verify {
 
     private final MessageManager msg = new MessageManager();
 
-    public boolean check (String sign, Point Q, BigInteger hash, SignatureParameters para) {
+    public boolean check (String sign, Point Q, BigInteger hash, SignatureParameters para) throws Exception {
         this.parameters = para;
         this.sign = sign;
         this.Q = Q;
@@ -42,7 +42,7 @@ public class Verify {
      * Вычисление r и s по полученной подписи
      * см. Шаг 1
      */
-    private void extraction() {
+    private void extraction() throws Exception {
         try {
             r = new BigInteger(sign.substring(0, parameters.p.bitLength() / 4), 16);
             s = new BigInteger(sign.substring(parameters.p.bitLength() / 4), 16);
@@ -66,7 +66,7 @@ public class Verify {
      * Вычисление точки C эллиптической кривой
      * см. Шаг 5-6
      */
-    private Point calcC() {
+    private Point calcC() throws Exception {
         var v = e.modInverse(parameters.q);
         var z1 = (s.multiply(v)).mod(parameters.q);
         var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(parameters.q);
