@@ -81,12 +81,12 @@
             <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.junit.vintage</groupId>-->
-<!--            <artifactId>junit-vintage-engine</artifactId>-->
-<!--            <version>5.7.0</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.7.0</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.jeasy</groupId>
             <artifactId>easy-random-core</artifactId>
@@ -96,7 +96,7 @@
             <groupId>com.ginsberg</groupId>
             <artifactId>junit5-system-exit</artifactId>
             <version>1.0.0</version>
-            <scope>MainTest</scope>
+            <scope>Main.MainTest</scope>
         </dependency>
 
     </dependencies>
@@ -123,7 +123,7 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>src/main/java/signature/Constants.java</exclude>
+                        <exclude>src/main/java/Main.signature/Constants.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -143,7 +143,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>Main</mainClass>
+                            <mainClass>Main.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
