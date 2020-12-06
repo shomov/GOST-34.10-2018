@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package signature;
+package Main.signature;
 
 import java.math.BigInteger;
 
@@ -63,7 +63,6 @@ public class SignatureParameters {
                 "b = " + b + " (коэффициент эллиптичекой кривой)\n" +
                 "m = " + m + " (порядок группы точек эллиптической кривой)\n" +
                 "q = " + q + " (порядок циклической подгруппы группы точек эллиптической кривой)\n" +
-                "Xp = " + xp + " (коэффициент точки эллиптической кривой)\n" +
-                "Yp = " + yp + " (коэффициент точки эллиптичекой кривой)\n";
+                P.toString();
     }
 }

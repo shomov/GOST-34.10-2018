@@ -2,10 +2,10 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package major;
+package Main.major;
 
-import signature.*;
-import stribog.Hash;
+import Main.signature.*;
+import Main.stribog.Hash;
 
 import java.math.BigInteger;
 

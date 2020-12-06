@@ -2,10 +2,10 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package major;
+package Main.major;
 
-import signature.Point;
-import signature.SignatureParameters;
+import Main.signature.Point;
+import Main.signature.SignatureParameters;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class FileManager {
 
-    MessageManager msg = new MessageManager();
+    private final MessageManager msg = new MessageManager();
 
     public void fileCheck(String path, boolean needTo) throws IOException {
         var fInput = Paths.get(path);

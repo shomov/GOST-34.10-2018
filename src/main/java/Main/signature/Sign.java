@@ -2,9 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package signature;
-
-import major.MessageManager;
+package Main.signature;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -23,7 +21,6 @@ public class Sign {
     private BigInteger s;
 
     private EllipticCurve curveOperation;
-    private final MessageManager msg = new MessageManager();
 
     public String signing (BigInteger hash, BigInteger d, SignatureParameters parameters) throws Exception {
         this.parameters = parameters;

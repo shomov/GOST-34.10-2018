@@ -2,16 +2,16 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package signature;
+package Main.signature;
 
 import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
-import major.FileManager;
+import Main.major.FileManager;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import stribog.Hash;
+import Main.stribog.Hash;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -29,9 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 10;
+    private final int testIterations = 1000;
 
-    SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
+    private SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
 
     @Disabled

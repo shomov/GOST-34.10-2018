@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package signature;
+package Main.signature;
 
 import java.math.BigInteger;
 
@@ -35,9 +35,7 @@ public class Point {
     }
 
     public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Xp = " + getX() + " (коэффициент точки эллиптической кривой)\n" +
+        "Yp = " + getY() + " (коэффициент точки эллиптичекой кривой)\n";
     }
 }

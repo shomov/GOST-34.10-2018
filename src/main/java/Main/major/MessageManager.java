@@ -2,16 +2,16 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package major;
+package Main.major;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import signature.SignatureParameters;
+import Main.signature.SignatureParameters;
 
 import java.io.IOException;
 
 public class MessageManager {
-    Logger log = LogManager.getLogger(MessageManager.class.getName());
+    private final Logger log = LogManager.getLogger(MessageManager.class.getName());
 
     public void status(String remark){
         log.info("The program started with arguments: " + remark);
@@ -25,11 +25,11 @@ public class MessageManager {
                 break;
             case (2):
                 System.out.println("Подпись успешно прошла проверку");
-                log.info("The signature was verified");
+                log.info("The Main.signature was verified");
                 break;
             case (3):
                 System.out.println("Подпись не верна!");
-                log.info("The signature is not correct");
+                log.info("The Main.signature is not correct");
                 break;
             default:
                 System.out.println("Применение несанкционированного кода сообщения!");
@@ -52,7 +52,7 @@ public class MessageManager {
                 break;
             case (2):
                 msg = "Подпись нечитаема";
-                log.info("The signature is unreadable");
+                log.info("The Main.signature is unreadable");
                 break;
             case (3):
                 msg = "Входные параметры неверны!";

@@ -1,6 +1,10 @@
+package Main;
+
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,8 +16,6 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Nested
-@DisplayName("Success Cases")
 public class MainTest {
 
     private ByteArrayOutputStream outputStreamCaptor;
@@ -69,6 +71,11 @@ public class MainTest {
     public void incorrectFlag() {
         assertThrows(Exception.class, () -> Main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
     }
+
+    @Test
+    public void openFailed() {
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature25", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+    }
     
     @Test
     public void incorrectParameters() throws IOException {
@@ -88,6 +95,12 @@ public class MainTest {
         fakeSigGen();
         Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
         assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
+    }
+
+    @Test
+    public void incorrectSaving() {
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key", "-o", "/root/message.sig"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "/root/publicQ256.kq"}));
     }
 
     @Test
@@ -122,31 +135,6 @@ public class MainTest {
         assertEquals(parameters.trim(), outputStreamCaptor.toString().trim());
     }
 
-//    @Test
-//    void incorrect() throws IOException {
-//        //Неверный флаг
-//        assertThrows(Exception.class, () -> Main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
-//        //Неверные параметры
-//        parametersGen();
-//        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "TestDirectory/Parameter", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
-//        //Неверный ключ проверки
-//        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
-//        //Неверный ключ подписи
-//        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private.key"}));
-//
-//
-//
-//    }
-//
-//
-//    @Test
-//    @DisplayName("System.exit(1) is caught and detected")
-//    @ExpectSystemExitWithStatus(1)
-//    void privateKeyIsAbsent() throws Exception {
-//        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private.key"});
-//    }
-//
-//
     public void parametersGen() throws IOException {
         var generator = new EasyRandom();
         var msg = generator.nextObject(String.class);

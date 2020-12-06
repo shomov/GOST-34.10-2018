@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package stribog;
+package Main.stribog;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ public class Hash {
     private int[] N = new int[64];
     private int[] sig = new int[64];
 
-    StribogConstants stribogConstants = new StribogConstants();
+    private final StribogConstants stribogConstants = new StribogConstants();
 
     /**
      * Инициализация хэш-функции, установка начальных значений
