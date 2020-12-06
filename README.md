@@ -24,6 +24,7 @@ http://protect.gost.ru/document1.aspx?control=31&baseC=6&page=0&month=1&year=201
 Реализация алгоритмов произведена в рамках курсовой работы дисциплины "Алгоритмы и структуры данных". В ходе работы применены для учебных целей решения PVS-Studio, а также изучены библиотеки QuickCheck, EasyRandom. 
 
 Михаил Шомов
+
 mikle@shomov.spb.ru
 
 ## GOST-34.10-2018
@@ -46,4 +47,5 @@ Generate a decryption key if necessary:
 The algorithms were implemented as part of the course work of the discipline "Algorithms and data structures". During the work, PVS-Studio solutions were used for training purposes, as well as the QuickCheck and EasyRandom libraries were studied.
 
 Mikhail Shomov
+
 mikle@shomov.spb.ru
