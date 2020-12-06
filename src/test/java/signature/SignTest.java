@@ -8,6 +8,8 @@ import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 import major.FileManager;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import stribog.Hash;
 
@@ -27,11 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 5;
+    private final int testIterations = 1000;
 
     SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
 
+    @Disabled
+    @Test
     @Property(trials = testIterations)
     public void success(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
@@ -52,6 +56,8 @@ public class SignTest {
         assertTrue(test);
     }
 
+    @Disabled
+    @Test
     @Property(trials = testIterations)
     public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
@@ -73,6 +79,8 @@ public class SignTest {
         assertFalse(test);
     }
 
+    @Disabled
+    @Test
     @Property(trials = testIterations)
     public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
@@ -99,6 +107,8 @@ public class SignTest {
         assertFalse(test);
     }
 
+    @Disabled
+    @Test
     @Property(trials = testIterations)
     public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
@@ -121,8 +131,5 @@ public class SignTest {
             test = true;
         assertFalse(test);
     }
-
-
-
 
 }

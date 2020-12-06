@@ -47,7 +47,7 @@ public class Verify {
             r = new BigInteger(sign.substring(0, parameters.p.bitLength() / 4), 16);
             s = new BigInteger(sign.substring(parameters.p.bitLength() / 4), 16);
         }
-        catch (NumberFormatException e) {
+        catch (StringIndexOutOfBoundsException | NumberFormatException e) {
             msg.basicErrors(2);
         }
     }

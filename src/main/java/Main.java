@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         var flag = new FlagManager();
         flag.parsing(args);
-        new Direct(flag);
+        if (args.length > 2)
+            new Direct(flag);
     }
 }

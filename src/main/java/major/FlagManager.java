@@ -20,7 +20,7 @@ public class FlagManager {
 
     private final FileManager file = new FileManager();
     private final MessageManager msg = new MessageManager();
-    SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
+    public SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
 
     @Option(name = "-h")
     boolean help;
@@ -54,49 +54,49 @@ public class FlagManager {
         } catch (CmdLineException e) {
             msg.basicErrors(0);
         }
-
-        if (help) msg.status(0);
-
-        if (!fileParameters.equals(""))  {
-            if (!file.fileCheck(fileParameters))
-                msg.errorsIO(0, fileParameters);
+        if (help)
+            msg.status(0);
+        else if (!fileParameters.equals("") && fileSig.equals("") && filePrivateKey.equals("")
+                && fileD.equals("") && fileMessage.equals("")) {
             setParameters();
+            msg.curveSettings(parameters);
         }
+        else {
+            setParameters();
+            if (!fileD.equals("")) {
+                if (outputFileName.equals("")) msg.basicErrors(1);
+                if (file.fileCheck(outputFileName))
+                    msg.errorsIO(1, outputFileName);
+                if (!file.fileCheck(fileD))
+                    msg.errorsIO(0, fileD);
+                filePrivateKey = fileD;
+                setPrivateKey();
+            }
 
-        if (!fileD.equals("")) {
-            if (outputFileName.equals("")) msg.basicErrors(1);
-            if (file.fileCheck(outputFileName))
-                msg.errorsIO(1, outputFileName);
-            if (!file.fileCheck(fileD))
-                msg.errorsIO(0, fileD);
-            filePrivateKey = fileD;
-            setPrivateKey();
-//            createQ();
-//            msg.statusIO(0, outputFileName);
+            if (!fileMessage.equals("") && filePrivateKey.equals("") && fileD.equals("") && fileSig.equals(""))
+                msg.basicErrors(0);
+            else if (!fileMessage.equals("") && !file.fileCheck(fileMessage))
+                msg.errorsIO(0, fileMessage);
+
+            if (!filePrivateKey.equals("")) {
+                if (outputFileName == null) setPathOut();
+                if (file.fileCheck(filePrivateKey)) setPrivateKey();
+                else msg.basicErrors(0);
+            } else if (!fileVerKey.equals("") && !fileSig.equals("")) {
+                if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
+                else if (!file.fileCheck(fileVerKey))
+                    msg.errorsIO(0, fileVerKey);
+                else if (!file.fileCheck(fileSig))
+                    msg.errorsIO(0, fileSig);
+            } else msg.basicErrors(0);
         }
-
-        if (!fileMessage.equals("") && filePrivateKey.equals("") && fileD.equals("") && fileSig.equals(""))
-            msg.basicErrors(0);
-        else if (!fileMessage.equals("") && !file.fileCheck(fileMessage))
-            msg.errorsIO(0, fileMessage);
-
-        if (!filePrivateKey.equals("")) {
-            if (outputFileName == null) setPathOut();
-            if (file.fileCheck(filePrivateKey)) setPrivateKey();
-            else msg.basicErrors(0);
-        }
-        else if (!fileVerKey.equals("") && !fileSig.equals("")) {
-            if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
-            else if (!file.fileCheck(fileVerKey))
-                msg.errorsIO(0, fileVerKey);
-            else if (!file.fileCheck(fileSig))
-                msg.errorsIO(0, fileSig);
-        }
-        else msg.basicErrors(0);
-
     }
 
-    private void setParameters() throws IOException {
+    private void setParameters() throws Exception {
+        if (fileParameters.equals(""))
+            msg.basicErrors(0);
+        if (!file.fileCheck(fileParameters))
+            msg.errorsIO(0, fileParameters);
         parameters = file.setConstants(fileParameters);
     }
 
