@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 1000;
+    private final int testIterations = 100;
 
     private SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
@@ -131,5 +131,8 @@ public class SignTest {
             test = true;
         assertFalse(test);
     }
+
+
+
 
 }
