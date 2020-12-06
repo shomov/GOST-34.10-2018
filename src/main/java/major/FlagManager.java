@@ -65,29 +65,24 @@ public class FlagManager {
             setParameters();
             if (!fileD.equals("")) {
                 if (outputFileName.equals("")) msg.basicErrors(1);
-                if (file.fileCheck(outputFileName))
-                    msg.errorsIO(1, outputFileName);
-                if (!file.fileCheck(fileD))
-                    msg.errorsIO(0, fileD);
+                file.fileCheck(outputFileName, false);
+                file.fileCheck(fileD, true);
                 filePrivateKey = fileD;
                 setPrivateKey();
             }
 
             if (!fileMessage.equals("") && filePrivateKey.equals("") && fileD.equals("") && fileSig.equals(""))
                 msg.basicErrors(0);
-            else if (!fileMessage.equals("") && !file.fileCheck(fileMessage))
-                msg.errorsIO(0, fileMessage);
+            file.fileCheck(fileMessage, true);
 
             if (!filePrivateKey.equals("")) {
                 if (outputFileName == null) setPathOut();
-                if (file.fileCheck(filePrivateKey)) setPrivateKey();
-                else msg.basicErrors(0);
+                file.fileCheck(filePrivateKey, true);
+                setPrivateKey();
             } else if (!fileVerKey.equals("") && !fileSig.equals("")) {
-                if (file.fileCheck(fileVerKey) && file.fileCheck(fileSig)) setQ();
-                else if (!file.fileCheck(fileVerKey))
-                    msg.errorsIO(0, fileVerKey);
-                else if (!file.fileCheck(fileSig))
-                    msg.errorsIO(0, fileSig);
+                file.fileCheck(fileVerKey, true);
+                file.fileCheck(fileSig, true);
+                setQ();
             } else msg.basicErrors(0);
         }
     }
@@ -95,28 +90,25 @@ public class FlagManager {
     private void setParameters() throws Exception {
         if (fileParameters.equals(""))
             msg.basicErrors(0);
-        if (!file.fileCheck(fileParameters))
-            msg.errorsIO(0, fileParameters);
+        file.fileCheck(fileParameters, true);
         parameters = file.setConstants(fileParameters);
     }
 
     private void setPrivateKey() throws IOException {
         var list = file.stringReader(filePrivateKey);
         if (list.size() != 1)
-            msg.errorsIO(2, filePrivateKey);
+            msg.errorsIO(1, filePrivateKey);
         d = list.get(0);
     }
 
     private void setQ() throws IOException {
         var list = file.stringReader(fileVerKey);
-        if (list.size() != 2) msg.errorsIO(2, fileVerKey);
+        if (list.size() != 2) msg.errorsIO(1, fileVerKey);
         Q = new Point(list.get(0), list.get(1));
-
     }
 
     void setPathOut() throws IOException {
         outputFileName = fileMessage + ".sig";
-        if (file.fileCheck(outputFileName))
-            msg.errorsIO(1, outputFileName);
+        file.fileCheck(outputFileName, false);
     }
 }

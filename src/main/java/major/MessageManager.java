@@ -88,22 +88,18 @@ public class MessageManager {
         var msg = "";
         switch (code) {
             case (0):
-                msg = "Файл отсутствует " + path;
-                log.info("The file is missing " + path);
+                msg = "Ошибка ввода/вывода. Проверьте пути " + path;
+                log.info("IO error " + path);
                 break;
             case (1):
-                msg = "Файл уже присутствует " + path + " воспользуйтесь ручным выбором -o ";
-                log.info("The file is already present" + path);
-                break;
-            case (2):
                 msg = "Файл повреждён " + path;
                 log.info("The file is corrupted " + path);
                 break;
-            case (3):
+            case (2):
                 msg = "Ошибка чтения " + path;
                 log.info("Read error " + path);
                 break;
-            case (4):
+            case (3):
                 msg = "Ошибка записи " + path;
                 log.info("Write error " + path);
                 break;

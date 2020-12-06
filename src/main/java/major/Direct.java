@@ -35,7 +35,7 @@ public class Direct {
         }
         else {
             var message = file.messageReader(fileMessage);
-            if (message.length == 0) msg.errorsIO(2, fileMessage);
+            if (message.length == 0) msg.errorsIO(1, fileMessage);
 
             var digit = 256;
             if (parameters.digit) digit = 512;
@@ -58,7 +58,7 @@ public class Direct {
         var ver = new Verify();
         var sign = file.signReader(fileSig);
 
-        if (sign.equals("")) msg.errorsIO(3, fileSig);
+        if (sign.equals("")) msg.errorsIO(2, fileSig);
 
         var check = ver.check(sign, Q, hash, parameters);
         if (check)

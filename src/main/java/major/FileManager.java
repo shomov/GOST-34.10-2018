@@ -10,6 +10,7 @@ import signature.SignatureParameters;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -17,16 +18,33 @@ public class FileManager {
 
     MessageManager msg = new MessageManager();
 
-    boolean fileCheck(String path) {
+    public void fileCheck(String path, boolean needTo) throws IOException {
         var fInput = Paths.get(path);
-        return !Files.notExists(fInput.toAbsolutePath()) && Files.isRegularFile(fInput.toAbsolutePath());
+        var result = Files.exists(fInput) && Files.isRegularFile(fInput);
+        if (result && !needTo)
+            msg.errorsIO(0, path);
+    }
+
+    public SignatureParameters setConstants (String fileParameters) throws IOException {
+        var list = stringReader(fileParameters);
+        var parameters = SignatureParameters.PARAMETERS_INFINITY;
+        try {
+            var a = false;
+            if (list.get(0).equals(new BigInteger("512"))) a = true;
+            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(1, fileParameters);
+            parameters = new SignatureParameters(a,
+                    list.get(1), list.get(2), list.get(3), list.get(4),
+                    list.get(5), list.get(6), list.get(7));
+        } catch (Exception exception) {
+            msg.errorsIO(1, fileParameters);
+        }
+        return parameters;
     }
 
     public ArrayList<BigInteger> stringReader(String path) throws IOException {
         var result = new ArrayList<BigInteger>();
         try {
-            var fr = new FileReader(path);
-            var reader = new BufferedReader(fr);
+            var reader = Files.newBufferedReader(Path.of(path));
             var line = reader.readLine();
 
             while (line != null) {
@@ -37,65 +55,48 @@ public class FileManager {
             }
 
         } catch (IOException exception) {
-            msg.errorsIO(3, path);
+            msg.errorsIO(2, path);
         }
         return result;
     }
 
-    public SignatureParameters setConstants (String fileParameters) throws IOException {
-        var list = stringReader(fileParameters);
-        var parameters = SignatureParameters.PARAMETERS_INFINITY;
+    public int[] messageReader(String path) throws IOException {
         try {
-            var a = false;
-            if (list.get(0).equals(new BigInteger("512"))) a = true;
-            else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(2, fileParameters);
-            parameters = new SignatureParameters(a,
-                    list.get(1), list.get(2), list.get(3), list.get(4),
-                    list.get(5), list.get(6), list.get(7));
-        } catch (Exception exception) {
-            msg.errorsIO(2, fileParameters);
-        }
-        return parameters;
-    }
-
-    int[] messageReader(String path) throws IOException {
-        try {
-            var fis = new FileInputStream(path);
+            var fis = Files.newInputStream(Path.of(path));
             var data = fis.readAllBytes();
             var dataOut = new int[data.length];
             for (var i = 0; i < data.length; i++)
                 dataOut[i] = (data[i] * 8) & 0xFF; //перевод числа в положительный диапазон
-
             return dataOut;
         } catch (IOException exception) {
-            msg.errorsIO(3, path);
+            msg.errorsIO(2, path);
         }
         return new int[0];
     }
 
-    String signReader(String path) throws IOException {
+    public String signReader(String path) throws IOException {
         try {
-            var fr = new FileReader(path);
-            var reader = new BufferedReader(fr);
+            var reader = Files.newBufferedReader(Path.of(path));
             return reader.readLine();
         } catch (IOException exception) {
-            msg.errorsIO(3, path);
+            msg.errorsIO(2, path);
         }
         return "";
     }
 
-    void writeSignature(String signature, String fileOut) throws IOException {
-        try(var writer = new FileWriter(fileOut, false)) {
-            writer.write(signature);
-            writer.flush();
+    public void writeSignature(String signature, String fileOut) throws IOException {
+        try {
+            var fos = new FileOutputStream(fileOut, true);
+            fos.write(signature.getBytes(), 0, signature.getBytes().length);
+            fos.close();
             msg.statusIO(1, fileOut);
         }
         catch(IOException ex){
-            msg.errorsIO(4, fileOut);
+            msg.errorsIO(3, fileOut);
         }
     }
 
-    void writePublicKey(Point Q, String file) throws IOException {
+    public void writePublicKey(Point Q, String file) throws IOException {
         try {
             var writer = new FileWriter(file);
             var newLine = System.getProperty("line.separator");
@@ -103,7 +104,7 @@ public class FileManager {
             writer.write(Q.getY().toString());
             writer.flush();
         } catch (IOException e) {
-            msg.errorsIO(4, file);
+            msg.errorsIO(3, file);
         }
 
     }
