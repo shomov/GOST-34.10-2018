@@ -32,11 +32,9 @@ public class Hash {
             this.method = false;
             a = 0x01;
         }
-        for (var i = 0; i < 64; i++) {
-            N[i] = 0x00;
-            sig[i] = 0x00;
-            iv[i] = a;
-        }
+        Arrays.fill(N, 0x00);
+        Arrays.fill(sig, 0x00);
+        Arrays.fill(iv, a);       
     }
 
     public BigInteger getHash (int[] message){
@@ -47,7 +45,7 @@ public class Hash {
         //Разбиение сообщения на блоки 64 байт
         while (l > 64) {
             System.arraycopy(message, l - 64, m, 0, 64);
-            h = gN(h, m);
+            h = gN(h, m, N);
             N = ringAdd(N, stribogConstants.numByte(512 / 8));
             sig = ringAdd(sig, m);
             l -= 64;
@@ -64,11 +62,11 @@ public class Hash {
             m = shift;
         }
 
-        h = gN(h, m);
+        h = gN(h, m, N);
         N = ringAdd(N, stribogConstants.numByte(l));
         sig = ringAdd(sig, m);
-        h = g0(h, N);
-        h = g0(h, sig);
+        h = gN(h, N, stribogConstants.numByte(0));
+        h = gN(h, sig, stribogConstants.numByte(0));
 
         if (method)
             return new BigInteger(int2byte(h));
@@ -96,16 +94,10 @@ public class Hash {
      * Функция сжатия
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
-    private int[] g0(int[] h, int[] m) {
-        var LPS = L(P(S(xFun(h, stribogConstants.numByte(0)))));
+    private int[] gN(int[] h, int[] m, int[] val) {
+        var LPS = L(P(S(xFun(h, val))));
         return xFun(xFun(E(LPS, m), h), m);
     }
-
-    private int[] gN(int[] h, int[] m) {
-        var LPS = L(P(S(xFun(h, N))));
-        return xFun(xFun(E(LPS, m), h), m);
-    }
-
 
     /**
      * Часть функции сжатия. Задача - XOR временного ключа с итерационными константами, указанными в настоящем ГОСТ.
@@ -135,18 +127,19 @@ public class Hash {
 
     /**
      * Функция подстановки. Каждому элементу массива лежащему в диапазоне от 0 до 255 соотвествует значение таблицы замещения с соответствующем значению порядковым номером http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=8A5E965D-A695-4C6C-9DC0-76EFE1C804D5
-     * @see StribogConstants#substitution
+     * @see Main.stribog.StribogConstants#substitution
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] S (int[] val) {
         var result = new int[64];
-        for (var i = 0; i < 64; i++) result[i] = stribogConstants.substitution[val[i]];
+        for (var i = 0; i < 64; i++) 
+            result[i] = stribogConstants.substitution[val[i]];
         return result;
     }
 
     /**
      * Функция перестановки. Входные значения возвращаются функцией в порядке, установленном таблицей перестановок
-     * @see StribogConstants#t
+     * @see Main.stribog.StribogConstants#t
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] P (int[] val) {
@@ -157,10 +150,9 @@ public class Hash {
 
     /**
      * Функция линейного преобразования
-     * @param val разбивается на блоки по 8 байт, каждому биту соотносится строка из A
-     * @see StribogConstants#A
+     * @param val разбивается на блоки по 8 байт, каждому биту каждого байта соотносится строка из A
+     * @see Main.stribog.StribogConstants#A
      * Затем проверяется значение бита, если 1, то выполняется операция XOR над результирующей строкой и строкой массива A
-     *
      */
     private int[] L (int[] val) {
         var result = new int[64];

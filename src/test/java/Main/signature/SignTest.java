@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 1000;
+    private final int testIterations = 10;
 
     SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
@@ -39,9 +39,9 @@ public class SignTest {
     @Property(trials = testIterations)
     public void success(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature512");
         var curveOperation = new EllipticCurve(parameters);
-        var stribog512_1 = new Hash(256);
+        var stribog512_1 = new Hash(512);
         var check = new Verify();
         var test = true;
         var ar512 = stribog512_1.getHash(message);
