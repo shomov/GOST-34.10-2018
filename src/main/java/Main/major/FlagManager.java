@@ -72,10 +72,9 @@ public class FlagManager {
                 setPrivateKey();
             }
 
-            file.fileCheck(fileMessage, true);
-
             if (!filePrivateKey.equals("")) {
-                if (outputFileName == null) setPathOut();
+                if (outputFileName == null)
+                    setPathOut();
                 file.fileCheck(filePrivateKey, true);
                 setPrivateKey();
             } else if (!fileVerKey.equals("") && !fileSig.equals("")) {

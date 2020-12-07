@@ -29,13 +29,7 @@ public class Sign {
         calcE(hash);
         randK();
 
-        //проверка
-//        var curveOperation = new EllipticCurve(parameters);
-//        var Q = curveOperation.scalar(d, parameters.P);
-//        var ver = new Verify();
         var signature = concatenation();
-//        if (!ver.check(signature, Q, hash, parameters))
-//            signing(hash, d, parameters);
 
         return signature;
     }

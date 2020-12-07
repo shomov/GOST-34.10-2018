@@ -21,7 +21,7 @@ public class FileManager {
     public void fileCheck(String path, boolean needTo) throws IOException {
         var fInput = Paths.get(path);
         var result = Files.exists(fInput) && Files.isRegularFile(fInput);
-        if (result && !needTo)
+        if (!result && needTo)
             msg.errorsIO(0, path);
     }
 
