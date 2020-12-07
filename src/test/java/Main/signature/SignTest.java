@@ -4,14 +4,14 @@
 
 package Main.signature;
 
+import Main.major.FileManager;
+import Main.stribog.Hash;
 import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
-import Main.major.FileManager;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import Main.stribog.Hash;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -29,9 +29,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 100;
+    private final int testIterations = 1000;
 
-    private SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
+    SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
     private final FileManager file = new FileManager();
 
     @Disabled
@@ -41,7 +41,7 @@ public class SignTest {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
         var curveOperation = new EllipticCurve(parameters);
-        var stribog512_1 = new Hash(512);
+        var stribog512_1 = new Hash(256);
         var check = new Verify();
         var test = true;
         var ar512 = stribog512_1.getHash(message);
@@ -61,7 +61,7 @@ public class SignTest {
     @Property(trials = testIterations)
     public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature512");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -84,7 +84,7 @@ public class SignTest {
     @Property(trials = testIterations)
     public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature512");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -113,26 +113,15 @@ public class SignTest {
     public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
         parameters = file.setConstants("Parameters/Signature256");
-        var curveOperation = new EllipticCurve(parameters);
-        var stribog512_1 = new Hash(512);
+        var stribog512_1 = new Hash(256);
         var check = new Verify();
         var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
-        var Q = curveOperation.scalar(d, parameters.P);
-        var test = false;
         var rand = new Random();
-        var rx = rand.nextInt();
-        var ry = rand.nextInt();
-        var x = (Q.getX().add(BigInteger.valueOf(rx)));
-        var y = (Q.getY().add(BigInteger.valueOf(ry)));
-        var ver = check.check(key, new Point(x, y), ar512, parameters);
-        if (ver)
-            test = true;
-        assertFalse(test);
+        var x = new BigInteger(parameters.q.bitLength(), rand);
+        var y = new BigInteger(parameters.q.bitLength(), rand);
+        assertFalse(check.check(key, new Point(x, y), ar512, parameters));
     }
-
-
-
 
 }
