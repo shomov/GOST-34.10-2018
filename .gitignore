@@ -1,2 +1,4 @@
 /.idea/
 /.PVS-Studio/
+/nbactions.xml
+/nbactions-release-profile.xml

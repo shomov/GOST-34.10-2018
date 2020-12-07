@@ -64,15 +64,14 @@ public class FlagManager {
         else {
             setParameters();
             if (!fileD.equals("")) {
-                if (outputFileName.equals("")) msg.basicErrors(1);
+                if (outputFileName == null)
+                    msg.basicErrors(1);
                 file.fileCheck(outputFileName, false);
                 file.fileCheck(fileD, true);
                 filePrivateKey = fileD;
                 setPrivateKey();
             }
 
-            if (!fileMessage.equals("") && filePrivateKey.equals("") && fileD.equals("") && fileSig.equals(""))
-                msg.basicErrors(0);
             file.fileCheck(fileMessage, true);
 
             if (!filePrivateKey.equals("")) {

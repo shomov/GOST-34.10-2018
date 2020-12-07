@@ -70,11 +70,17 @@ public class MainTest {
     @Test
     public void incorrectFlag() {
         assertThrows(Exception.class, () -> Main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{}));
     }
 
     @Test
     public void openFailed() {
         assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature25", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+    }
+    
+    @Test
+    public void incorrectQcreate() {
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key"}));
     }
     
     @Test
