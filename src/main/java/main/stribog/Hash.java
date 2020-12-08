@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.stribog;
+package main.stribog;
 
 import java.math.BigInteger;
 import java.util.Arrays;

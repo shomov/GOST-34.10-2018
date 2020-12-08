@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.signature;
+package main.signature;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -59,7 +59,7 @@ public class Sign {
 
     // см. (17)
     private void calcR(Point C) throws Exception {
-        r = C.getX().mod(parameters.q);
+        r = C.x().mod(parameters.q);
         if (r.equals(BigInteger.ZERO) || r.toString(16).length() > parameters.p.bitLength() / 4)
             randK();
         calcS();

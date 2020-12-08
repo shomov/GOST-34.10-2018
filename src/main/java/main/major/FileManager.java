@@ -2,10 +2,10 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.major;
+package main.major;
 
-import Main.signature.Point;
-import Main.signature.SignatureParameters;
+import main.signature.Point;
+import main.signature.SignatureParameters;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -100,8 +100,8 @@ public class FileManager {
         try {
             var writer = new FileWriter(file);
             var newLine = System.getProperty("line.separator");
-            writer.write(Q.getX().toString() + newLine);
-            writer.write(Q.getY().toString());
+            writer.write(Q.x().toString() + newLine);
+            writer.write(Q.y().toString());
             writer.flush();
         } catch (IOException e) {
             msg.errorsIO(3, file);

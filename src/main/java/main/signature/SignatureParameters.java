@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.signature;
+package main.signature;
 
 import java.math.BigInteger;
 
@@ -57,7 +57,7 @@ public class SignatureParameters {
 
     @Override
     public String toString() {
-        return "Параметры эллиптической кривой \n" +
+        return "Параметры эллиптической кривой\n" +
         "p = " + p + " (модуль эллиптической кривой)\n" +
                 "a = " + a + " (коэффициент эллиптичекой кривой)\n" +
                 "b = " + b + " (коэффициент эллиптичекой кривой)\n" +

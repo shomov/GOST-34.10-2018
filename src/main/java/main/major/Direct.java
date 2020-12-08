@@ -2,10 +2,10 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.major;
+package main.major;
 
-import Main.signature.*;
-import Main.stribog.Hash;
+import main.signature.*;
+import main.stribog.Hash;
 
 import java.math.BigInteger;
 
@@ -42,7 +42,7 @@ public class Direct {
 
             var stribog = new Hash(digit);
             this.hash = stribog.getHash(message);
-            if (Q.getX() == null) signing();
+            if (Q.x() == null) signing();
             else verification();
         }
     }

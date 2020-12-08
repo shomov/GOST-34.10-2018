@@ -1,12 +1,12 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
-package Main;
+package main;
 
-import Main.major.Direct;
-import Main.major.FlagManager;
+import main.major.Direct;
+import main.major.FlagManager;
 
-public class Main {
+public class main {
 
     public static void main(String[] args) throws Exception {
         var flag = new FlagManager();

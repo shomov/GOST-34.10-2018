@@ -2,9 +2,9 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.signature;
+package main.signature;
 
-import Main.major.MessageManager;
+import main.major.MessageManager;
 
 import java.math.BigInteger;
 
@@ -33,7 +33,7 @@ public class Verify {
         if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(parameters.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(parameters.q) >= 0)
             return false;
         calcE();
-        var R = calcC().getX().mod(parameters.q);
+        var R = calcC().x().mod(parameters.q);
 
         return R.compareTo(r) == 0;
     }

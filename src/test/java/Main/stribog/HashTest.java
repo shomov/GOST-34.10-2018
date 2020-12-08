@@ -4,7 +4,8 @@
 
 package Main.stribog;
 
-import org.junit.Assert;
+import main.stribog.Hash;
+import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -68,20 +69,20 @@ class HashTest {
         //Пример 1
         var stribog512_1 = new Hash(512);
         var ar512 = stribog512_1.getHash(message1);
-        Assert.assertEquals(hash1_512BI, ar512);
+        assertEquals(hash1_512BI, ar512);
 
         var stribog512_2 = new Hash(512);
         ar512 = stribog512_2.getHash(message2);
-        Assert.assertEquals(hash2_512BI, ar512);
+        assertEquals(hash2_512BI, ar512);
 
         //Пример 2
         var stribog256_1 = new Hash(256);
         var ar256 = stribog256_1.getHash(message1);
-        Assert.assertEquals(hash1_256BI, ar256);
+        assertEquals(hash1_256BI, ar256);
 
         var stribog256_2 = new Hash(256);
         ar256 = stribog256_2.getHash(message2);
-        Assert.assertEquals(hash2_256BI, ar256);
+        assertEquals(hash2_256BI, ar256);
 
     }
 

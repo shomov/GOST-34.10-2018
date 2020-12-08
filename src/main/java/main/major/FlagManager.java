@@ -2,13 +2,13 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.major;
+package main.major;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import Main.signature.Point;
-import Main.signature.SignatureParameters;
+import main.signature.Point;
+import main.signature.SignatureParameters;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -16,7 +16,7 @@ import java.math.BigInteger;
 
 public class FlagManager {
     public BigInteger d;
-    public Point Q = Point.POINT_INFINITY;
+    public Point Q = new Point(null, null);
 
     private final FileManager file = new FileManager();
     private final MessageManager msg = new MessageManager();
