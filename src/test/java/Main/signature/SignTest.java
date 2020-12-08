@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 10;
+    private final int testIterations = 100;
 
     SignatureParameters parameters = new SignatureParameters(false, null, null, null, null, null, new Point(null, null));
     private final FileManager file = new FileManager();
