@@ -22,6 +22,8 @@ jobs:
         java-version: 15
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Test
+      run: mvn -B test --file pom.xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
