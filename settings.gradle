@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+}
+rootProject.name = 'GOST-34.10-2018'
+ 
