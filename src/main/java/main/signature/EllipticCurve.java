@@ -60,13 +60,13 @@ public class EllipticCurve {
         var y = BigInteger.ZERO;
         try {
             if (b.equals(a)) {
-                var lambda = (((a.x().pow(2)).multiply(BigInteger.valueOf(3))).add(parameters.a)).multiply((a.y().multiply(BigInteger.TWO)).modInverse(parameters.p));
-                x = ((lambda.pow(2).subtract(a.x().multiply(BigInteger.TWO))).mod(parameters.p));
-                y = (a.y().negate()).add(lambda.multiply(a.x().subtract(x))).mod(parameters.p);
+                var lambda = (((a.x().pow(2)).multiply(BigInteger.valueOf(3))).add(parameters.a())).multiply((a.y().multiply(BigInteger.TWO)).modInverse(parameters.p()));
+                x = ((lambda.pow(2).subtract(a.x().multiply(BigInteger.TWO))).mod(parameters.p()));
+                y = (a.y().negate()).add(lambda.multiply(a.x().subtract(x))).mod(parameters.p());
             } else {
-                var lambda = (b.y().subtract(a.y())).multiply(b.x().subtract(a.x()).modInverse(parameters.p));
-                x = (lambda.modPow(BigInteger.TWO, parameters.p).subtract(b.x()).subtract(a.x()).mod(parameters.p));
-                y = a.y().negate().mod(parameters.p).add(lambda.multiply(a.x().subtract(x))).mod(parameters.p);
+                var lambda = (b.y().subtract(a.y())).multiply(b.x().subtract(a.x()).modInverse(parameters.p()));
+                x = (lambda.modPow(BigInteger.TWO, parameters.p()).subtract(b.x()).subtract(a.x()).mod(parameters.p()));
+                y = a.y().negate().mod(parameters.p()).add(lambda.multiply(a.x().subtract(x))).mod(parameters.p());
             }
         } catch (Exception e) {
             msg.basicErrors(3);

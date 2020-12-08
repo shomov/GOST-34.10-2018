@@ -30,10 +30,10 @@ public class Verify {
         this.hash = hash;
 
         extraction();
-        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(parameters.q) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(parameters.q) >= 0)
+        if (r.compareTo(BigInteger.ZERO) <= 0 || r.compareTo(parameters.q()) >= 0 || s.compareTo(BigInteger.ZERO) <= 0 || s.compareTo(parameters.q()) >= 0)
             return false;
         calcE();
-        var R = calcC().x().mod(parameters.q);
+        var R = calcC().x().mod(parameters.q());
 
         return R.compareTo(r) == 0;
     }
@@ -44,8 +44,8 @@ public class Verify {
      */
     private void extraction() throws Exception {
         try {
-            r = new BigInteger(sign.substring(0, parameters.p.bitLength() / 4), 16);
-            s = new BigInteger(sign.substring(parameters.p.bitLength() / 4), 16);
+            r = new BigInteger(sign.substring(0, parameters.p().bitLength() / 4), 16);
+            s = new BigInteger(sign.substring(parameters.p().bitLength() / 4), 16);
         }
         catch (StringIndexOutOfBoundsException | NumberFormatException e) {
             msg.basicErrors(2);
@@ -57,7 +57,7 @@ public class Verify {
      * см. Шаг 2-3
      */
     private void calcE() {
-        e = hash.mod(parameters.q);
+        e = hash.mod(parameters.q());
         if (e.compareTo(BigInteger.ZERO) == 0)
             e = BigInteger.ONE;
     }
@@ -67,12 +67,12 @@ public class Verify {
      * см. Шаг 5-6
      */
     private Point calcC() throws Exception {
-        var v = e.modInverse(parameters.q);
-        var z1 = (s.multiply(v)).mod(parameters.q);
-        var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(parameters.q);
+        var v = e.modInverse(parameters.q());
+        var z1 = (s.multiply(v)).mod(parameters.q());
+        var z2 = (BigInteger.valueOf(-1).multiply(r.multiply(v))).mod(parameters.q());
 
         var curveOperation = new EllipticCurve(parameters);
-        return curveOperation.sum(curveOperation.scalar(z1, parameters.P), curveOperation.scalar(z2, Q));
+        return curveOperation.sum(curveOperation.scalar(z1, parameters.P()), curveOperation.scalar(z2, Q));
     }
 
 }

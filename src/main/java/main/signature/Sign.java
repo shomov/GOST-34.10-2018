@@ -29,13 +29,11 @@ public class Sign {
         calcE(hash);
         randK();
 
-        var signature = concatenation();
-
-        return signature;
+        return concatenation();
     }
 
     private void calcE(BigInteger hash) {
-        e = hash.mod(parameters.q);
+        e = hash.mod(parameters.q());
         if (e.equals(BigInteger.ZERO))
             e = BigInteger.ONE;
     }
@@ -44,40 +42,40 @@ public class Sign {
     // см. (16) Стандарта
     private void randK() throws Exception {
         var rand = new Random();
-        k = new BigInteger(parameters.q.bitLength(), rand);
-        while (k.compareTo(parameters.q) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
-            k = new BigInteger(parameters.q.bitLength(), rand);
+        k = new BigInteger(parameters.q().bitLength(), rand);
+        while (k.compareTo(parameters.q()) >= 0 || k.compareTo(BigInteger.ZERO) < 1)
+            k = new BigInteger(parameters.q().bitLength(), rand);
         genC();
     }
 
     // Вычисление точки эллиптической кривой
     // см. Шаг 4
     private void genC() throws Exception {
-        var pnt = curveOperation.scalar(k, parameters.P);
+        var pnt = curveOperation.scalar(k, parameters.P());
         calcR(pnt);
     }
 
     // см. (17)
     private void calcR(Point C) throws Exception {
-        r = C.x().mod(parameters.q);
-        if (r.equals(BigInteger.ZERO) || r.toString(16).length() > parameters.p.bitLength() / 4)
+        r = C.x().mod(parameters.q());
+        if (r.equals(BigInteger.ZERO) || r.toString(16).length() > parameters.p().bitLength() / 4)
             randK();
         calcS();
     }
 
     // см. (18)
     private void calcS() throws Exception {
-        s = ((r.multiply(d)).add(k.multiply(e))).mod(parameters.q);
-        if (s.equals(BigInteger.ZERO) || s.toString(16).length() > parameters.p.bitLength() / 4)
+        s = ((r.multiply(d)).add(k.multiply(e))).mod(parameters.q());
+        if (s.equals(BigInteger.ZERO) || s.toString(16).length() > parameters.p().bitLength() / 4)
             randK();
     }
 
     // Дополнение векторов до определённой длины (длина модуля элллиптической кривой), что в дальнейшем позволит восстановить r и s
     private String completion (BigInteger num) throws Exception {
         var str = new StringBuilder(num.toString(16));
-        while (str.length() < parameters.p.bitLength() / 4) //1 цифра кодируется 4 битами
+        while (str.length() < parameters.p().bitLength() / 4) //1 цифра кодируется 4 битами
             str.insert(0, "0");
-        if (str.length() > parameters.p.bitLength() / 4)
+        if (str.length() > parameters.p().bitLength() / 4)
             randK();
         return str.toString();
     }

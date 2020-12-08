@@ -30,7 +30,7 @@ public class Direct {
 
         if (!flag.fileD.equals("")) {
             var curveOperation = new EllipticCurve(parameters);
-            file.writePublicKey(curveOperation.scalar(d, parameters.P), flag.outputFileName);
+            file.writePublicKey(curveOperation.scalar(d, parameters.P()), flag.outputFileName);
             msg.statusIO(0, flag.outputFileName);
         }
         else {
@@ -38,7 +38,7 @@ public class Direct {
             if (message.length == 0) msg.errorsIO(1, fileMessage);
 
             var digit = 256;
-            if (parameters.digit) digit = 512;
+            if (parameters.digit()) digit = 512;
 
             var stribog = new Hash(digit);
             this.hash = stribog.getHash(message);

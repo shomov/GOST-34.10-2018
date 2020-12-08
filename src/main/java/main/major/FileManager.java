@@ -27,14 +27,14 @@ public class FileManager {
 
     public SignatureParameters setConstants (String fileParameters) throws IOException {
         var list = stringReader(fileParameters);
-        var parameters = SignatureParameters.PARAMETERS_INFINITY;
+        var parameters = new SignatureParameters(false, null, null, null, null, null, new Point(null, null));
         try {
             var a = false;
             if (list.get(0).equals(new BigInteger("512"))) a = true;
             else if (!list.get(0).equals(new BigInteger("256"))) msg.errorsIO(1, fileParameters);
             parameters = new SignatureParameters(a,
                     list.get(1), list.get(2), list.get(3), list.get(4),
-                    list.get(5), list.get(6), list.get(7));
+                    list.get(5), new Point(list.get(6), list.get(7)));
         } catch (Exception exception) {
             msg.errorsIO(1, fileParameters);
         }

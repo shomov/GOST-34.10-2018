@@ -30,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @RunWith(JUnitQuickcheck.class)
 public class SignTest {
 
-    private final int testIterations = 1000;
+    private final int testIterations = 10;
 
-    SignatureParameters parameters = SignatureParameters.PARAMETERS_INFINITY;
+    SignatureParameters parameters = new SignatureParameters(false, null, null, null, null, null, new Point(null, null));
     private final FileManager file = new FileManager();
 
     @Disabled
@@ -49,7 +49,7 @@ public class SignTest {
         // подписание
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
-        var Q = curveOperation.scalar(d, parameters.P);
+        var Q = curveOperation.scalar(d, parameters.P());
         // верификация
         var ver = check.check(key, Q, ar512, parameters);
         if (!ver)
@@ -69,7 +69,7 @@ public class SignTest {
         var ar512 = stribog512_1.getHash(message);
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
-        var Q = curveOperation.scalar(d, parameters.P);
+        var Q = curveOperation.scalar(d, parameters.P());
         var test = false;
         var rand = new Random();
         message[rand.nextInt(message.length)] = rand.nextInt(256);
@@ -90,7 +90,7 @@ public class SignTest {
         var stribog512_1 = new Hash(512);
         var check = new Verify();
         var ar512 = stribog512_1.getHash(message);
-        var Q = curveOperation.scalar(d, parameters.P);
+        var Q = curveOperation.scalar(d, parameters.P());
         var sign = new Sign();
         var key = new StringBuilder(sign.signing(ar512, d, parameters));
         var rand = new Random();
@@ -120,8 +120,8 @@ public class SignTest {
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
         var rand = new Random();
-        var x = new BigInteger(parameters.q.bitLength(), rand);
-        var y = new BigInteger(parameters.q.bitLength(), rand);
+        var x = new BigInteger(parameters.q().bitLength(), rand);
+        var y = new BigInteger(parameters.q().bitLength(), rand);
         assertFalse(check.check(key, new Point(x, y), ar512, parameters));
     }
 
