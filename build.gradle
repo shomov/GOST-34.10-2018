@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+sourceCompatibility = 15
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += '--enable-preview'
+}
+tasks.withType(Test) {
+    jvmArgs += "--enable-preview"
+}
+
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+jacoco {
+    toolVersion = "0.8.6"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+dependencies {
+    compile 'com.pholser:junit-quickcheck-guava:1.0'
+    compile 'com.pholser:junit-quickcheck-generators:1.0'
+    compile 'com.pholser:junit-quickcheck-core:1.0'
+    compile group: 'org.jeasy', name: 'easy-random-core', version: '4.0.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.14.0'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+    compile group: 'args4j', name: 'args4j', version: '2.32'
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileJava {
+    options.compilerArgs += ['--enable-preview']
+}
