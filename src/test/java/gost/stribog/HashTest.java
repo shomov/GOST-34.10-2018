@@ -2,9 +2,8 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package Main.stribog;
+package gost.stribog;
 
-import main.stribog.Hash;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -2,13 +2,13 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package main.major;
+package gost.major;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import main.signature.Point;
-import main.signature.SignatureParameters;
+import gost.signature.Point;
+import gost.signature.SignatureParameters;
 
 import java.io.IOException;
 import java.math.BigInteger;

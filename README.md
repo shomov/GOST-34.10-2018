@@ -27,7 +27,7 @@ http://protect.gost.ru/document1.aspx?control=31&baseC=6&page=0&month=1&year=201
 mikle@shomov.spb.ru
 
 ## GOST-34.10-2018
-Information technology. Cryptographic data security. Signature and verification processes of electronic digital Main.Main.Main.signature.
+Information technology. Cryptographic data security. Signature and verification processes of electronic digital signature.
 
 http://protect.gost.ru/document1.aspx?control=31&baseC=6&page=0&month=1&year=2019&search=&id=232149
 

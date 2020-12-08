@@ -2,11 +2,11 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package main.major;
+package gost.major;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import main.signature.SignatureParameters;
+import gost.signature.SignatureParameters;
 
 import java.io.IOException;
 
@@ -36,7 +36,6 @@ public class MessageManager {
                 log.error("Unauthorized message code");
             }
         }
-//        System.exit(0);
     }
 
     public void basicErrors(int code) throws Exception {
@@ -118,7 +117,7 @@ public class MessageManager {
     private String help() {
         return """
                 Справка
-                 Приложение реализует алгоритм формирования электронной цифровой подписи в соответствии с ГОСТ 34.10-2018
+                Приложение реализует алгоритм формирования электронной цифровой подписи в соответствии с ГОСТ 34.10-2018
                 Имеет три режима работы:
                 Генерация ЭЦП
                 Верификация ЭЦП

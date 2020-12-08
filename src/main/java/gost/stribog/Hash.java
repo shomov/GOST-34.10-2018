@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package main.stribog;
+package gost.stribog;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -127,7 +127,7 @@ public class Hash {
 
     /**
      * Функция подстановки. Каждому элементу массива лежащему в диапазоне от 0 до 255 соотвествует значение таблицы замещения с соответствующем значению порядковым номером http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=8A5E965D-A695-4C6C-9DC0-76EFE1C804D5
-     * @see Main.stribog.StribogConstants#substitution
+     * @see gost.stribog.StribogConstants#substitution
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] S (int[] val) {
@@ -139,7 +139,7 @@ public class Hash {
 
     /**
      * Функция перестановки. Входные значения возвращаются функцией в порядке, установленном таблицей перестановок
-     * @see Main.stribog.StribogConstants#t
+     * @see gost.stribog.StribogConstants#t
      * http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=224241&pageK=6C6D6BF2-DDD4-4BD9-8037-943B58998298
      */
     private int[] P (int[] val) {
@@ -151,7 +151,7 @@ public class Hash {
     /**
      * Функция линейного преобразования
      * @param val разбивается на блоки по 8 байт, каждому биту каждого байта соотносится строка из A
-     * @see Main.stribog.StribogConstants#A
+     * @see gost.stribog.StribogConstants#A
      * Затем проверяется значение бита, если 1, то выполняется операция XOR над результирующей строкой и строкой массива A
      */
     private int[] L (int[] val) {

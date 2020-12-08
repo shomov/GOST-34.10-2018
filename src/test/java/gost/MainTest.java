@@ -1,6 +1,5 @@
-package Main;
+package gost;
 
-import main.main;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.AfterEach;
@@ -115,7 +114,7 @@ public class MainTest {
         main.main(new String[]{"-h"});
         var help = """
                 Справка
-                 Приложение реализует алгоритм формирования электронной цифровой подписи в соответствии с ГОСТ 34.10-2018
+                Приложение реализует алгоритм формирования электронной цифровой подписи в соответствии с ГОСТ 34.10-2018
                 Имеет три режима работы:
                 Генерация ЭЦП
                 Верификация ЭЦП
