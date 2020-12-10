@@ -10,15 +10,17 @@ http://protect.gost.ru/document1.aspx?control=31&baseC=6&page=0&month=1&year=201
 
 Возможны следующие вариации входных данных:
 
-`-p (файл с параметрами эллептической кривой) -m (файл сообщения) -s (файл с секретным ключом) [-o (выходной файл для сохранения ЭП)]`
+`-p (файл с параметрами эллиптической кривой) -m (файл сообщения) -s (файл с секретным ключом) [-o (выходной файл для сохранения ЭП)]`
 
-`-p (файл с параметрами эллептической кривой) -m (файл сообщения) -v (файл с ключом расшифровки)`
+`-p (файл с параметрами эллиптической кривой) -m (файл сообщения) -v (файл с ключом расшифровки)`
 
 В случае необходимости сгенерировать ключ расшифровки:
 
-`-p (файл с параметрами эллептической кривой) -q (файл с секретным ключом) -o (выходной файл для сохранения ключа)`
+`-p (файл с параметрами эллиптической кривой) -q (файл с секретным ключом) -o (выходной файл для сохранения ключа)`
 
 Данная работа призвана быть наглядным материалом в деле освоения новейших государственных стандартов защиты информации, поэтому каждая функция максимально документируется и описывается.
+
+Выполнены [JMH измерения алгоритма хеширования по ГОСТ 34.11-2018](https://github.com/shomov/GOST-34.11-2018_JMH)
 
 Реализация алгоритмов произведена в рамках курсовой работы дисциплины "Алгоритмы и структуры данных". В ходе работы применены для учебных целей решения PVS-Studio, а также изучены библиотеки QuickCheck, EasyRandom. 
 
@@ -42,6 +44,8 @@ The following input data variations are possible:
 Generate a decryption key if necessary:
 
 `-p (file with elliptic curve parameters) - q (file with secret key) - o (output file for saving the key)`
+
+[JMH measurements of the hashing algorithm according to GOST 34.11-2018](https://github.com/shomov/GOST-34.11-2018_JMH) were performed
 
 The algorithms were implemented as part of the course work of the discipline "Algorithms and data structures". During the work, PVS-Studio solutions were used for training purposes, as well as the QuickCheck and EasyRandom libraries were studied.
 
