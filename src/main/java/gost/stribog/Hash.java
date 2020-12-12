@@ -165,19 +165,11 @@ public class Hash {
         return result;
     }
 
-    // https://stackoverflow.com/questions/2183240/java-integer-to-byte-array
     private byte[] int2byte(int[] src) {
         var srcLength = src.length;
-        var dst = new byte[srcLength << 2];
-        for (var i = 0; i < srcLength; i++) {
-            var x = src[i];
-            var j = i << 2;
-            dst[j] = (byte) ((x) & 0xff);
-            j++;
-            dst[j] = (byte) ((x >>> 8) & 0xff);
-            dst[j] = (byte) ((x >>> 16) & 0xff);
-            dst[j] = (byte) ((x >>> 24) & 0xff);
-        }
+        var dst = new byte[srcLength];
+        for (var i = 0; i < srcLength; i++)
+            dst[i] = (byte) (src[i] - 128);
         return dst;
     }
 
