@@ -4,7 +4,7 @@
 
 package gost.signature;
 
-import gost.major.MessageManager;
+import gost.occasion.AlienExceptions;
 
 import java.math.BigInteger;
 
@@ -20,8 +20,6 @@ public class Verify {
     private BigInteger r;
     private BigInteger s;
     private BigInteger e;
-
-    private final MessageManager msg = new MessageManager();
 
     public boolean check (String sign, Point Q, BigInteger hash, SignatureParameters para) throws Exception {
         this.parameters = para;
@@ -48,7 +46,7 @@ public class Verify {
             s = new BigInteger(sign.substring(parameters.p().bitLength() / 4), 16);
         }
         catch (StringIndexOutOfBoundsException | NumberFormatException e) {
-            msg.basicErrors(2);
+            throw new AlienExceptions.SignatureUnreadableException();
         }
     }
 

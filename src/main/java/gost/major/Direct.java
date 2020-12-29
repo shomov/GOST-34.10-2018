@@ -4,6 +4,8 @@
 
 package gost.major;
 
+import gost.occasion.AlienExceptions;
+import gost.occasion.Statuses;
 import gost.signature.*;
 import gost.stribog.Hash;
 
@@ -31,11 +33,11 @@ public class Direct {
         if (!flag.fileD.equals("")) {
             var curveOperation = new EllipticCurve(parameters);
             file.writePublicKey(curveOperation.scalar(d, parameters.P()), flag.outputFileName);
-            msg.statusIO(0, flag.outputFileName);
+            msg.statusIO(Statuses.KEYWRITE, flag.outputFileName);
         }
         else {
             var message = file.messageReader(fileMessage);
-            if (message.length == 0) msg.errorsIO(1, fileMessage);
+            if (message.length == 0) throw new AlienExceptions.FileCorruptedException(fileMessage);
 
             var digit = 256;
             if (parameters.digit()) digit = 512;
@@ -58,13 +60,13 @@ public class Direct {
         var ver = new Verify();
         var sign = file.signReader(fileSig);
 
-        if (sign.equals("")) msg.errorsIO(2, fileSig);
+        if (sign.equals("")) throw new AlienExceptions.FileReadingException(fileSig);
 
         var check = ver.check(sign, Q, hash, parameters);
         if (check)
-            msg.status(2);
+            msg.status(Statuses.VERIVIED);
         else
-            msg.status(3);
+            msg.status(Statuses.UNVERIVIED);
     }
 
 }

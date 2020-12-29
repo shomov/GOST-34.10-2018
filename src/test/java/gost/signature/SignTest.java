@@ -43,17 +43,13 @@ public class SignTest {
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
-        var test = true;
         var ar512 = stribog512_1.getHash(message);
         // подписание
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P());
         // верификация
-        var ver = check.check(key, Q, ar512, parameters);
-        if (!ver)
-            test = false;
-        assertTrue(test);
+        assertTrue(check.check(key, Q, ar512, parameters));
     }
 
     @Disabled
@@ -69,14 +65,10 @@ public class SignTest {
         var sign = new Sign();
         var key = sign.signing(ar512, d, parameters);
         var Q = curveOperation.scalar(d, parameters.P());
-        var test = false;
         var rand = new Random();
         message[rand.nextInt(message.length)] = rand.nextInt(256);
         var ar512W = stribog512_1.getHash(message);
-        var ver = check.check(key, Q, ar512W, parameters);
-        if (ver)
-            test = true;
-        assertFalse(test);
+        assertFalse(check.check(key, Q, ar512W, parameters));
     }
 
     @Disabled
@@ -100,11 +92,7 @@ public class SignTest {
             ch = new BigInteger(String.valueOf(rand.nextInt(16))).toString(16);
         } while (key.charAt(r) == ch.charAt(0));
         key.setCharAt(r, ch.charAt(0));
-        var ver = check.check(key.toString(), Q, ar512, parameters);
-        var test = false;
-        if (ver)
-            test = true;
-        assertFalse(test);
+        assertFalse(check.check(key.toString(), Q, ar512, parameters));
     }
 
     @Disabled

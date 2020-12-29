@@ -5,6 +5,7 @@
 package gost.signature;
 
 import gost.major.MessageManager;
+import gost.occasion.AlienExceptions;
 
 import java.math.BigInteger;
 
@@ -69,7 +70,7 @@ public class EllipticCurve {
                 y = a.y().negate().mod(parameters.p()).add(lambda.multiply(a.x().subtract(x))).mod(parameters.p());
             }
         } catch (Exception e) {
-            msg.basicErrors(3);
+            throw new AlienExceptions.IncorrectParametersException();
         }
         return new Point(x, y);
     }

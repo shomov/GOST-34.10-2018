@@ -4,11 +4,10 @@
 
 package gost.major;
 
+import gost.occasion.Statuses;
+import gost.signature.SignatureParameters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import gost.signature.SignatureParameters;
-
-import java.io.IOException;
 
 public class MessageManager {
     private final Logger log = LogManager.getLogger(MessageManager.class.getName());
@@ -17,17 +16,17 @@ public class MessageManager {
         log.info("The program started with arguments: " + remark);
     }
 
-    public void status(int code) {
+    public void status(Statuses code) {
         switch (code) {
-            case (0) -> {
+            case HELP -> {
                 System.out.println(help());
                 log.info("help called");
             }
-            case (2) -> {
+            case VERIVIED -> {
                 System.out.println("Подпись успешно прошла проверку");
                 log.info("The Main.signature was verified");
             }
-            case (3) -> {
+            case UNVERIVIED -> {
                 System.out.println("Подпись не верна!");
                 log.info("The Main.signature is not correct");
             }
@@ -38,40 +37,13 @@ public class MessageManager {
         }
     }
 
-    public void basicErrors(int code) throws Exception {
-        var msg = "";
+    public void statusIO(Statuses code, String path) {
         switch (code) {
-            case (0) -> {
-                msg = "Неверно заданы аргументы\n -h  —  помощь";
-                log.info("Invalid arguments");
-            }
-            case (1) -> {
-                msg = "Отсутствует файл назначения\n -h  —  помощь";
-                log.info("Missing destination file");
-            }
-            case (2) -> {
-                msg = "Подпись нечитаема";
-                log.info("The Main.signature is unreadable");
-            }
-             case (3) -> {
-                msg = "Входные параметры неверны!";
-                log.info("Input parameters are incorrect");
-            }
-            default -> {
-                msg = "Применение несанкционированного кода ошибки!";
-                log.error("Unauthorized error code");
-            }
-        }
-    throw new Exception(msg);
-    }
-
-    public void statusIO(int code, String path) {
-        switch (code) {
-            case (0) -> {
+            case KEYWRITE -> {
                 System.out.println("Публичный ключ успешно записан в файл " + path);
                 log.info("The public key was successfully written to " + path);
             }
-            case (1) -> {
+            case SIGNWRITE -> {
                 System.out.println("Электронная цифровая подпись успешно записана в " + path);
                 log.info("The EDS was successfully recorded in " + path);
             }
@@ -81,33 +53,6 @@ public class MessageManager {
                 System.exit(1);
             }
         }
-    }
-
-    public void errorsIO(int code, String path) throws IOException {
-        var msg = "";
-        switch (code) {
-            case (0) -> {
-                msg = "Ошибка ввода/вывода. Проверьте пути " + path;
-                log.info("IO error " + path);
-            }
-            case (1) -> {
-                msg = "Файл повреждён " + path;
-                log.info("The file is corrupted " + path);
-            }
-            case (2) -> {
-                msg = "Ошибка чтения " + path;
-                log.info("Read error " + path);
-            }
-            case (3) -> {
-                msg = "Ошибка записи " + path;
-                log.info("Write error " + path);
-            }
-            default -> {
-                msg = "Применение несанкционированного кода сообщения!";
-                log.error("Unauthorized message code");
-            }
-        }
-        throw new IOException(msg);
     }
 
     public void curveSettings(SignatureParameters parameters) {

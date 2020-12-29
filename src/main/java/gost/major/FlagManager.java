@@ -4,13 +4,14 @@
 
 package gost.major;
 
+import gost.occasion.AlienExceptions;
+import gost.occasion.Statuses;
+import gost.signature.Point;
+import gost.signature.SignatureParameters;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-import gost.signature.Point;
-import gost.signature.SignatureParameters;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 
@@ -52,10 +53,10 @@ public class FlagManager {
         try {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
-            msg.basicErrors(0);
+            throw new AlienExceptions.IllegalArgumentException();
         }
         if (help)
-            msg.status(0);
+            msg.status(Statuses.HELP);
         else if (!fileParameters.equals("") && fileSig.equals("") && filePrivateKey.equals("")
                 && fileD.equals("") && fileMessage.equals("")) {
             setParameters();
@@ -65,7 +66,7 @@ public class FlagManager {
             setParameters();
             if (!fileD.equals("")) {
                 if (outputFileName == null)
-                    msg.basicErrors(1);
+                    throw new AlienExceptions.DestinationFileNotFoundException();
                 file.fileCheck(outputFileName, false);
                 file.fileCheck(fileD, true);
                 filePrivateKey = fileD;
@@ -81,31 +82,32 @@ public class FlagManager {
                 file.fileCheck(fileVerKey, true);
                 file.fileCheck(fileSig, true);
                 setQ();
-            } else msg.basicErrors(0);
+            } else throw new AlienExceptions.IllegalArgumentException();
         }
     }
 
     private void setParameters() throws Exception {
         if (fileParameters.equals(""))
-            msg.basicErrors(0);
+            throw new AlienExceptions.IllegalArgumentException();
         file.fileCheck(fileParameters, true);
         parameters = file.setConstants(fileParameters);
     }
 
-    private void setPrivateKey() throws IOException {
+    private void setPrivateKey() throws AlienExceptions.FileCorruptedException, AlienExceptions.FileReadingException {
         var list = file.stringReader(filePrivateKey);
         if (list.size() != 1)
-            msg.errorsIO(1, filePrivateKey);
+            throw new AlienExceptions.FileCorruptedException(filePrivateKey);
         d = list.get(0);
     }
 
-    private void setQ() throws IOException {
+    private void setQ() throws AlienExceptions.FileReadingException, AlienExceptions.FileCorruptedException {
         var list = file.stringReader(fileVerKey);
-        if (list.size() != 2) msg.errorsIO(1, fileVerKey);
+        if (list.size() != 2)
+            throw new AlienExceptions.FileCorruptedException(fileVerKey);
         Q = new Point(list.get(0), list.get(1));
     }
 
-    private void setPathOut() throws IOException {
+    private void setPathOut() throws AlienExceptions.IOException {
         outputFileName = fileMessage + ".sig";
         file.fileCheck(outputFileName, false);
     }
