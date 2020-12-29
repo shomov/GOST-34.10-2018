@@ -30,14 +30,12 @@ public class FileManager {
     }
 
     public SignatureParameters setConstants (String fileParameters) throws AlienExceptions.FileCorruptedException {
-        var parameters = new SignatureParameters(false, null, null, null, null, null, new Point(null, null));
+        var parameters = new SignatureParameters(null, null, null, null, null, null, new Point(null, null));
         try {
             var list = stringReader(fileParameters);
-            var a = false;
-            if (list.get(0).equals(new BigInteger("512"))) a = true;
-            else if (!list.get(0).equals(new BigInteger("256")))
+            if (!list.get(0).equals(new BigInteger("512")) && !list.get(0).equals(new BigInteger("256")))
                 throw new AlienExceptions.FileCorruptedException(fileParameters);
-            parameters = new SignatureParameters(a,
+            parameters = new SignatureParameters(Integer.parseInt(list.get(0).toString()),
                     list.get(1), list.get(2), list.get(3), list.get(4),
                     list.get(5), new Point(list.get(6), list.get(7)));
         } catch (Exception exception) {

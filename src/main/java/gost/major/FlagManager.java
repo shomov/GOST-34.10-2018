@@ -21,7 +21,7 @@ public class FlagManager {
 
     private final FileManager file = new FileManager();
     private final MessageManager msg = new MessageManager();
-    SignatureParameters parameters = new SignatureParameters(false, null, null, null, null, null, new Point(null, null));
+    SignatureParameters parameters = new SignatureParameters(null, null, null, null, null, null, new Point(null, null));
 
     @Option(name = "-h")
     boolean help;

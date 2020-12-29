@@ -31,7 +31,7 @@ public class SignTest {
 
     private final int testIterations = 1000;
 
-    SignatureParameters parameters = new SignatureParameters(false, null, null, null, null, null, new Point(null, null));
+    SignatureParameters parameters = new SignatureParameters(null, null, null, null, null, null, new Point(null, null));
     private final FileManager file = new FileManager();
 
     @Disabled

@@ -39,10 +39,7 @@ public class Direct {
             var message = file.messageReader(fileMessage);
             if (message.length == 0) throw new AlienExceptions.FileCorruptedException(fileMessage);
 
-            var digit = 256;
-            if (parameters.digit()) digit = 512;
-
-            var stribog = new Hash(digit);
+            var stribog = new Hash(parameters.digit());
             this.hash = stribog.getHash(message);
             if (Q.x() == null) signing();
             else verification();

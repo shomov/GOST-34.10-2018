@@ -11,8 +11,8 @@ import java.math.BigInteger;
  * Базовые параметры эллиптической кривой
  * http://protect.gost.ru/v.aspx?control=8&baseC=6&page=0&month=1&year=2019&search=&RegNum=1&DocOnPageCount=15&id=224247&pageK=8E69DFE1-1A5C-4CF4-A10C-9C35E90341F2
  */
-    public record SignatureParameters (boolean digit, BigInteger p, BigInteger a,
-                         BigInteger b, BigInteger m, BigInteger q, Point P) {
+    public record SignatureParameters (Integer digit, BigInteger p, BigInteger a,
+                                       BigInteger b, BigInteger m, BigInteger q, Point P) {
     @Override
     public String toString() {
         return "Параметры эллиптической кривой\n" +
