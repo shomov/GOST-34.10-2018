@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package gost.major;
+package gost.controller;
 
 import gost.occasion.AlienExceptions;
 import gost.occasion.Statuses;
@@ -11,7 +11,7 @@ import gost.stribog.Hash;
 
 import java.math.BigInteger;
 
-public class Direct {
+public class Guide {
     private final String fileOut;
     private final String fileSig;
     private final Point Q;
@@ -22,7 +22,7 @@ public class Direct {
     private final FileManager file = new FileManager();
     private final MessageManager msg = new MessageManager();
 
-    public Direct(FlagManager flag) throws Exception {
+    public Guide(FlagManager flag) throws Exception {
         this.parameters = flag.parameters;
         var fileMessage = flag.fileMessage;
         this.fileOut = flag.outputFileName;

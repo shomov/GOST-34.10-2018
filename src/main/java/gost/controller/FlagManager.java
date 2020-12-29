@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package gost.major;
+package gost.controller;
 
 import gost.occasion.AlienExceptions;
 import gost.occasion.Statuses;
@@ -94,14 +94,14 @@ public class FlagManager {
     }
 
     private void setPrivateKey() throws AlienExceptions.FileCorruptedException, AlienExceptions.FileReadingException {
-        var list = file.stringReader(filePrivateKey);
+        var list = file.parametersReader(filePrivateKey);
         if (list.size() != 1)
             throw new AlienExceptions.FileCorruptedException(filePrivateKey);
         d = list.get(0);
     }
 
     private void setQ() throws AlienExceptions.FileReadingException, AlienExceptions.FileCorruptedException {
-        var list = file.stringReader(fileVerKey);
+        var list = file.parametersReader(fileVerKey);
         if (list.size() != 2)
             throw new AlienExceptions.FileCorruptedException(fileVerKey);
         Q = new Point(list.get(0), list.get(1));

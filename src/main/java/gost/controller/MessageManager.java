@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package gost.major;
+package gost.controller;
 
 import gost.occasion.Statuses;
 import gost.signature.SignatureParameters;

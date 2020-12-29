@@ -7,7 +7,7 @@ package gost.signature;
 import com.pholser.junit.quickcheck.Property;
 import com.pholser.junit.quickcheck.generator.InRange;
 import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
-import gost.major.FileManager;
+import gost.controller.FileManager;
 import gost.stribog.Hash;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package gost.occasion;
 
-import gost.major.MessageManager;
+import gost.controller.MessageManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

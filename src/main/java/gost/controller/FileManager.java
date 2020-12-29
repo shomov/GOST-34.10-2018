@@ -2,7 +2,7 @@
 
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-package gost.major;
+package gost.controller;
 
 import gost.occasion.AlienExceptions;
 import gost.occasion.Statuses;
@@ -32,7 +32,7 @@ public class FileManager {
     public SignatureParameters setConstants (String fileParameters) throws AlienExceptions.FileCorruptedException {
         var parameters = new SignatureParameters(null, null, null, null, null, null, new Point(null, null));
         try {
-            var list = stringReader(fileParameters);
+            var list = parametersReader(fileParameters);
             if (!list.get(0).equals(new BigInteger("512")) && !list.get(0).equals(new BigInteger("256")))
                 throw new AlienExceptions.FileCorruptedException(fileParameters);
             parameters = new SignatureParameters(Integer.parseInt(list.get(0).toString()),
@@ -44,7 +44,7 @@ public class FileManager {
         return parameters;
     }
 
-    public ArrayList<BigInteger> stringReader(String path) throws AlienExceptions.FileReadingException {
+    public ArrayList<BigInteger> parametersReader(String path) throws AlienExceptions.FileReadingException {
         var result = new ArrayList<BigInteger>();
         try {
             var reader = Files.newBufferedReader(Path.of(path));

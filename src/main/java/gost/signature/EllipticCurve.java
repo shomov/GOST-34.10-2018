@@ -4,7 +4,7 @@
 
 package gost.signature;
 
-import gost.major.MessageManager;
+import gost.controller.MessageManager;
 import gost.occasion.AlienExceptions;
 
 import java.math.BigInteger;

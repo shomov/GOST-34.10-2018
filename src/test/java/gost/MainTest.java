@@ -28,90 +28,90 @@ public class MainTest {
 
     @Test
     public void success256() throws Exception {
-        main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
-        main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
         outputStreamCaptor.reset();
-        main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"});
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"});
         final var expected = "Подпись успешно прошла проверку";
         assertEquals(expected, outputStreamCaptor.toString().trim());
     }
 
     @Test
     public void success512() throws Exception {
-        main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-s", "Keys/private512.key"});
-        main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key", "-o", "TestDirectory/publicQ512.kq"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-s", "Keys/private512.key"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key", "-o", "TestDirectory/publicQ512.kq"});
         outputStreamCaptor.reset();
-        main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ512.kq", "-sig", "TestDirectory/message.txt.sig"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ512.kq", "-sig", "TestDirectory/message.txt.sig"});
         final var expected = "Подпись успешно прошла проверку";
         assertEquals(expected, outputStreamCaptor.toString().trim());
     }
 
     @Test
     public void unsuccess256() throws Exception {
-        main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
-        main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
         outputStreamCaptor.reset();
-        main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"});
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"});
         final var expected = "Подпись не верна!";
         assertEquals(expected, outputStreamCaptor.toString().trim());
     }
 
     @Test
     public void unsuccess512() throws Exception {
-        main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-s", "Keys/private512.key"});
-        main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key", "-o", "TestDirectory/publicQ512.kq"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-s", "Keys/private512.key"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key", "-o", "TestDirectory/publicQ512.kq"});
         msgGen();
         outputStreamCaptor.reset();
-        main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ512.kq", "-sig", "TestDirectory/message.txt.sig"});
+        Main.main(new String[]{"-p", "Parameters/Signature512", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ512.kq", "-sig", "TestDirectory/message.txt.sig"});
         final var expected = "Подпись не верна!";
         assertEquals(expected, outputStreamCaptor.toString().trim());
     }
     
     @Test
     public void incorrectFlag() {
-        assertThrows(Exception.class, () -> main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
-        assertThrows(Exception.class, () -> main.main(new String[]{}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-t", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{}));
     }
 
     @Test
     public void openFailed() {
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "Parameters/Signature25", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature25", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
     }
     
     @Test
     public void incorrectQcreate() {
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature512", "-q", "Keys/private512.key"}));
     }
     
     @Test
     public void incorrectParameters() throws IOException {
         parametersGen();
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "TestDirectory/Parameter", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "TestDirectory/Parameter", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"}));
     }
 
     @Test
     public void incorrectVerificationKey() {
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
     }
 
     @Test
     public void incorrectSignature() throws Exception {
-        main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key"});
         Files.delete(Path.of("TestDirectory/message.txt.sig"));
         fakeSigGen();
-        main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
+        Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "TestDirectory/publicQ256.kq"});
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-v", "TestDirectory/publicQ256.kq", "-sig", "TestDirectory/message.txt.sig"}));
     }
 
     @Test
     public void incorrectSaving() {
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key", "-o", "/root/message.sig"}));
-        assertThrows(Exception.class, () -> main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "/root/publicQ256.kq"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-m", "TestDirectory/message.txt", "-s", "Keys/private256.key", "-o", "/root/message.sig"}));
+        assertThrows(Exception.class, () -> Main.main(new String[]{"-p", "Parameters/Signature256", "-q", "Keys/private256.key", "-o", "/root/publicQ256.kq"}));
     }
 
     @Test
     public void help() throws Exception {
-        main.main(new String[]{"-h"});
+        Main.main(new String[]{"-h"});
         var help = """
                 Справка
                 Приложение реализует алгоритм формирования электронной цифровой подписи в соответствии с ГОСТ 34.10-2018
@@ -135,7 +135,7 @@ public class MainTest {
 
     @Test
     public void parametersView() throws Exception {
-        main.main(new String[]{"-p", "Parameters/Signature512"});
+        Main.main(new String[]{"-p", "Parameters/Signature512"});
         var parameters = """
                 Параметры эллиптической кривой
                 p = 3623986102229003635907788753683874306021320925534678605086546150450856166624002482588482022271496854025090823603058735163734263822371964987228582907372403 (модуль эллиптической кривой)
