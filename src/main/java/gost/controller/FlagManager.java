@@ -106,7 +106,7 @@ public class FlagManager {
     private void setQ() throws AlienExceptions.FileReadingException, AlienExceptions.FileCorruptedException {
         var json = file.parametersReader(fileVerKey);
         try {
-        Q  = new ObjectMapper().readValue(json, Point.class);
+            Q  = new ObjectMapper().readValue(json, Point.class);
         } catch (Exception e){
             throw new AlienExceptions.FileCorruptedException(filePrivateKey);
         }

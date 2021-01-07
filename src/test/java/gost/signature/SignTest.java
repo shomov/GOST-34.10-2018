@@ -39,7 +39,7 @@ public class SignTest {
     @Property(trials = testIterations)
     public void success(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature512");
+        parameters = file.setConstants("Parameters/Signature512.json");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -57,7 +57,7 @@ public class SignTest {
     @Property(trials = testIterations)
     public void wrongMsgQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature512");
+        parameters = file.setConstants("Parameters/Signature512.json");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -76,7 +76,7 @@ public class SignTest {
     @Property(trials = testIterations)
     public void wrongSignQCh(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature512");
+        parameters = file.setConstants("Parameters/Signature512.json");
         var curveOperation = new EllipticCurve(parameters);
         var stribog512_1 = new Hash(512);
         var check = new Verify();
@@ -100,7 +100,7 @@ public class SignTest {
     @Property(trials = testIterations)
     public void wrongVerificationKeySign(@InRange(minInt = 0, maxInt = 255) int[] message, BigInteger d) throws Exception {
         assumeThat(message.length, greaterThan(0));
-        parameters = file.setConstants("Parameters/Signature256");
+        parameters = file.setConstants("Parameters/Signature256.json");
         var stribog512_1 = new Hash(256);
         var check = new Verify();
         var ar512 = stribog512_1.getHash(message);

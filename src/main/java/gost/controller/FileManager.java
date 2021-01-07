@@ -86,6 +86,7 @@ public class FileManager {
             var ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             var writer = new FileWriter(file);
             writer.write(ow.writeValueAsString(Q));
+            writer.flush();
         } catch (IOException e) {
             throw new AlienExceptions.FileWritingException(file);
         }
