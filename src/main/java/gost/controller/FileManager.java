@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 public class FileManager {
 
@@ -32,27 +31,20 @@ public class FileManager {
     public SignatureParameters setConstants (String fileParameters) throws AlienExceptions.FileCorruptedException {
         var parameters = new SignatureParameters(null, null, null, null, null, null, new Point(null, null));
         try {
-            var list = parametersReader(fileParameters);
-            parameters = new ObjectMapper().readValue(list.get(0), SignatureParameters.class);
+            var json = parametersReader(fileParameters);
+            parameters = new ObjectMapper().readValue(json, SignatureParameters.class);
         } catch (Exception exception) {
             throw new AlienExceptions.FileCorruptedException(fileParameters);
         }
         return parameters;
     }
 
-    public ArrayList<String> parametersReader(String path) throws AlienExceptions.FileReadingException {
-        var result = new ArrayList<String>();
+    public String parametersReader(String path) throws AlienExceptions.FileReadingException {
         try {
-            var reader = Files.newBufferedReader(Path.of(path));
-            var line = reader.readLine();
-            while (line != null) {
-                result.add(line.strip());
-                line = reader.readLine();
-            }
+            return new String(Files.readAllBytes(Paths.get(path)));
         } catch (IOException exception) {
             throw new AlienExceptions.FileReadingException(path);
         }
-        return result;
     }
 
     public int[] messageReader(String path) throws AlienExceptions.FileReadingException {
@@ -91,11 +83,9 @@ public class FileManager {
 
     public void writePublicKey(Point Q, String file) throws AlienExceptions.FileWritingException {
         try {
+            var ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             var writer = new FileWriter(file);
-            var newLine = System.getProperty("line.separator");
-            writer.write(Q.x().toString() + newLine);
-            writer.write(Q.y().toString());
-            writer.flush();
+            writer.write(ow.writeValueAsString(Q));
         } catch (IOException e) {
             throw new AlienExceptions.FileWritingException(file);
         }

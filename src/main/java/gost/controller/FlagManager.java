@@ -4,6 +4,7 @@
 
 package gost.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gost.occasion.AlienExceptions;
 import gost.occasion.Statuses;
 import gost.signature.Point;
@@ -94,20 +95,18 @@ public class FlagManager {
     }
 
     private void setPrivateKey() throws AlienExceptions.FileCorruptedException, AlienExceptions.FileReadingException {
-        var list = file.parametersReader(filePrivateKey);
-        if (list.size() != 1)
-            throw new AlienExceptions.FileCorruptedException(filePrivateKey);
+        var json = file.parametersReader(filePrivateKey);
         try {
-            d = new BigInteger(list.get(0));
+            d = new BigInteger(json);
         } catch (Exception e){
             throw new AlienExceptions.FileCorruptedException(filePrivateKey);
         }
     }
 
     private void setQ() throws AlienExceptions.FileReadingException, AlienExceptions.FileCorruptedException {
-        var list = file.parametersReader(fileVerKey);
+        var json = file.parametersReader(fileVerKey);
         try {
-            Q = new Point(new BigInteger(list.get(0)), new BigInteger(list.get(1)));
+        Q  = new ObjectMapper().readValue(json, Point.class);
         } catch (Exception e){
             throw new AlienExceptions.FileCorruptedException(filePrivateKey);
         }
