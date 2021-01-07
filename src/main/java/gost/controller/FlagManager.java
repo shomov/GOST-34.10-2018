@@ -97,14 +97,20 @@ public class FlagManager {
         var list = file.parametersReader(filePrivateKey);
         if (list.size() != 1)
             throw new AlienExceptions.FileCorruptedException(filePrivateKey);
-        d = list.get(0);
+        try {
+            d = new BigInteger(list.get(0));
+        } catch (Exception e){
+            throw new AlienExceptions.FileCorruptedException(filePrivateKey);
+        }
     }
 
     private void setQ() throws AlienExceptions.FileReadingException, AlienExceptions.FileCorruptedException {
         var list = file.parametersReader(fileVerKey);
-        if (list.size() != 2)
-            throw new AlienExceptions.FileCorruptedException(fileVerKey);
-        Q = new Point(list.get(0), list.get(1));
+        try {
+            Q = new Point(new BigInteger(list.get(0)), new BigInteger(list.get(1)));
+        } catch (Exception e){
+            throw new AlienExceptions.FileCorruptedException(filePrivateKey);
+        }
     }
 
     private void setPathOut() throws AlienExceptions.IOException {

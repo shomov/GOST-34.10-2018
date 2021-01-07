@@ -4,6 +4,7 @@
 
 package gost.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gost.occasion.AlienExceptions;
 import gost.occasion.Statuses;
 import gost.signature.Point;
@@ -12,7 +13,6 @@ import gost.signature.SignatureParameters;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,26 +33,20 @@ public class FileManager {
         var parameters = new SignatureParameters(null, null, null, null, null, null, new Point(null, null));
         try {
             var list = parametersReader(fileParameters);
-            if (!list.get(0).equals(new BigInteger("512")) && !list.get(0).equals(new BigInteger("256")))
-                throw new AlienExceptions.FileCorruptedException(fileParameters);
-            parameters = new SignatureParameters(Integer.parseInt(list.get(0).toString()),
-                    list.get(1), list.get(2), list.get(3), list.get(4),
-                    list.get(5), new Point(list.get(6), list.get(7)));
+            parameters = new ObjectMapper().readValue(list.get(0), SignatureParameters.class);
         } catch (Exception exception) {
             throw new AlienExceptions.FileCorruptedException(fileParameters);
         }
         return parameters;
     }
 
-    public ArrayList<BigInteger> parametersReader(String path) throws AlienExceptions.FileReadingException {
-        var result = new ArrayList<BigInteger>();
+    public ArrayList<String> parametersReader(String path) throws AlienExceptions.FileReadingException {
+        var result = new ArrayList<String>();
         try {
             var reader = Files.newBufferedReader(Path.of(path));
             var line = reader.readLine();
             while (line != null) {
-                try {
-                    result.add(new BigInteger(line.strip()));
-                } catch (Exception ignored){}
+                result.add(line.strip());
                 line = reader.readLine();
             }
         } catch (IOException exception) {

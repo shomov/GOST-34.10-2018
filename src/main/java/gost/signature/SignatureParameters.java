@@ -4,6 +4,9 @@
 
 package gost.signature;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigInteger;
 
 
@@ -22,5 +25,23 @@ import java.math.BigInteger;
                 "m = " + m + " (порядок группы точек эллиптической кривой)\n" +
                 "q = " + q + " (порядок циклической подгруппы группы точек эллиптической кривой)\n" +
                 P.toString(); //Р - точка эллиптической кривой
+    }
+
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public SignatureParameters(
+            @JsonProperty("digit") Integer digit,
+            @JsonProperty("p") BigInteger p,
+            @JsonProperty("a") BigInteger a,
+            @JsonProperty("b") BigInteger b,
+            @JsonProperty("m") BigInteger m,
+            @JsonProperty("q") BigInteger q,
+            @JsonProperty("P") Point P) {
+        this.digit = digit;
+        this.p = p;
+        this.a = a;
+        this.b = b;
+        this.m = m;
+        this.q = q;
+        this.P = P;
     }
 }
